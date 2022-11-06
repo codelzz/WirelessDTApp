@@ -20,7 +20,7 @@ struct PredictionView: View {
             /// Square Error Histogram
             Text("Square Error Histogram")
                 .fontWeight(.semibold)
-            PredictionSqureErrorChartView(data: Histogram.generate(data: predictor.squareErrors, bins: 100))
+            PredictionSqureErrorChartView(data: Histogram.generate(data: predictor.squareErrors, bins: 100, min: 0, max: 6))
             /// Summary
             HStack {
                 if let pos = predictor.pos, let err = predictor.squareError {

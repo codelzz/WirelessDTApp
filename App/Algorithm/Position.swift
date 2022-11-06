@@ -12,8 +12,23 @@ struct Position : Identifiable, Equatable {
     let x:Double
     let y:Double
     let z:Double
+    let t:Double
     
-    static let example: Position = Position(x: 0, y: 0, z: 0)
+    init(x: Double, y: Double, z: Double, t: Double = Date().timeIntervalSince1970) {
+        self.x = x
+        self.y = y
+        self.z = z
+        self.t = t
+    }
+    
+    init() {
+        self.x = 0.0
+        self.y = 0.0
+        self.z = 0.0
+        self.t = Date().timeIntervalSince1970
+    }
+    
+    static let example: Position = Position(x: 0, y: 0, z: 0, t:0)
     
     static func distance(lhs: Position, rhs: Position) -> Double
     {

@@ -33,10 +33,32 @@ final class AppTests: XCTestCase {
         XCTAssertEqual(result, answer)
     }
     
-    func testMatInverse() throws {
+    func testMatInverse() {
         let matrix = Mat(matrix: [[2, 0], [0, 2]])
         let answer = Mat(matrix: [[0.5, 0], [0, 0.5]])
         let result = matrix.inv()
+        XCTAssertEqual(result, answer)
+    }
+    
+    func testMakeZeroMatrix() {
+        let dimM = 3
+        let dimN = 6
+        let answer = Mat(matrix: [[0.0,0.0,0.0,0.0,0.0,0.0],
+                                  [0.0,0.0,0.0,0.0,0.0,0.0],
+                                  [0.0,0.0,0.0,0.0,0.0,0.0]])
+        let result = Mat.makeZeroMatrix(rows: dimM, cols: dimN)
+        XCTAssertEqual(result, answer)
+    }
+    
+    func testMakeIdentityMatrix() {
+        let dim = 6
+        let answer = Mat(matrix: [[1.0,0.0,0.0,0.0,0.0,0.0],
+                                  [0.0,1.0,0.0,0.0,0.0,0.0],
+                                  [0.0,0.0,1.0,0.0,0.0,0.0],
+                                  [0.0,0.0,0.0,1.0,0.0,0.0],
+                                  [0.0,0.0,0.0,0.0,1.0,0.0],
+                                  [0.0,0.0,0.0,0.0,0.0,1.0]])
+        let result = Mat.makeIdentityMatrix(dim: dim)
         XCTAssertEqual(result, answer)
     }
 //

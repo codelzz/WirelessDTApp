@@ -8,7 +8,7 @@
 import Foundation
 
 class Trilateration : PositioningAlgorithm {
-    static let maxSpeed: Double = 10 /// 5 m/s
+    static let maxSpeed: Double = 50.0 /// 5 m/s
 
     var prevPos: Position?
     var prevT: Double = NSDate().timeIntervalSince1970

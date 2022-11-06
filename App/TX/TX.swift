@@ -19,18 +19,18 @@ struct TXInfo: Decodable, Identifiable {
 }
 
 struct RSSIMeasurement: Identifiable {
-    var id: Int {timestamp}
+    var id: Double {timestamp}
     let rssi: Int
-    let timestamp: Int
+    let timestamp: Double
     
-    static let example = RSSIMeasurement(rssi: -27, timestamp: 1667531183068)
+    static let example = RSSIMeasurement(rssi: -27, timestamp: 1667531183.068)
 }
 
 class TX : ObservableObject, Identifiable, Comparable {
     var id: String { info.name }
     let info: TXInfo
     @Published var rssi: Int?
-    var timestamp: Int?
+    var timestamp: Double?
     var rssis: [RSSIMeasurement] = []
     var distance: Double { Signal.rssiToDistance(rssi: rssi!) }
     static let minRssi: Int = -255
@@ -43,7 +43,7 @@ class TX : ObservableObject, Identifiable, Comparable {
         self.info = info
     }
     
-    func update(rssi: Int, timestamp: Int)
+    func update(rssi: Int, timestamp: Double)
     {
         DispatchQueue.main.async {
             self.rssi = rssi > TX.minRssi ? rssi : nil

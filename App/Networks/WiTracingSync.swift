@@ -68,17 +68,18 @@ class WiTracingSync : ObservableObject {
         self.connection?.stateUpdateHandler = { newState in
             switch newState {
             case .ready:
-                print("[INF] Listener ready to receive message - \(connection.endpoint)")
+                //print("[INF] Listener ready to receive message - \(connection.endpoint)")
                 /// received message
                 self.recv()
                 self.send()
             case .cancelled, .failed:
-                print("[INF] Listener failed to receive message - \(connection.endpoint)")
+                //print("[INF] Listener failed to receive message - \(connection.endpoint)")
                 /// cancel the listener
                 self.listener?.cancel()
                 self.bListening = false
             default:
-                print("[INF] Listener waiting to receive message - \(connection.endpoint)")
+                //print("[INF] Listener waiting to receive message - \(connection.endpoint)")
+                break
             }
         }
         self.connection?.start(queue: .global())
@@ -94,8 +95,8 @@ class WiTracingSync : ObservableObject {
                 print("[ERR] Received nil Data with context -\(String(describing: data))")
                 return
             }
-            if let data = try? JSONDecoder().decode(WiTracingData.self, from: data) {
-                NotificationCenter.default.post(name: Constant.NotificationNameWiTracingDidRecvData, object: nil, userInfo: data.toDict())
+            if let data = try? JSONDecoder().decode(WiTracingData.self, from: data) {/// convert from milliseconds to seconds
+                NotificationCenter.default.post(name: Constant.NotificationNameWiTracingDidRecvData, object: nil, userInfo: data.toAppUnit().toDict())
             } else {
                 print("[ERR] unable to decode")
             }

@@ -49,13 +49,13 @@ class TXManager : ObservableObject {
         if let userInfo = notification.userInfo {
             if let txname = userInfo["txname"] as? String,
                 let rssi = userInfo["rssi"] as? Int,
-                let timestamp = userInfo["timestamp"] as? Int {
+                let timestamp = userInfo["timestamp"] as? Double {
                 self.updateTX(txname: txname, rssi: rssi, timestamp: timestamp)
             }
         }
     }
     
-    func updateTX(txname: String, rssi: Int, timestamp: Int)
+    func updateTX(txname: String, rssi: Int, timestamp: Double)
     {
         self.txs[txname]?.update(rssi: rssi, timestamp: timestamp)
     }

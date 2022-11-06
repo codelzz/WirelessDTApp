@@ -9,6 +9,7 @@ import Foundation
 
 class Predictor : ObservableObject {
     let algorithm: PositioningAlgorithm
+    var kalmanFilter: KalmanFilter?
     /// timer
     static let Interval:Double = 0.05
     var timer: Timer?
@@ -16,14 +17,15 @@ class Predictor : ObservableObject {
     @Published var pos: Position?       /// pos save the prediction result
     var refPos: Position?               /// refPos the realPos collected when prediction is done, it is use for evaluate square error
     @Published var realPos: Position?   /// realPos store the latest ground truth data
-    static let maxNumRealPos: Int = 100
-    static let maxNumPredPos: Int = 10
-    var predPoses: [Position] = []
+    static let maxNumRealPos: Int = 50
+    static let maxNumPredPos: Int = 30
     var realPoses: [Position] = []
+    var predPoses: [Position] = []
+    static let minRealPosUpdateInterval: Double = 0.15
     /// analysis
     var squareError: Double?
     var squareErrors: [Double] = []
-    static let maxNumSquareErr: Int = 200
+    static let maxNumSquareErr: Int = 1000
     
     init(algorithm: PositioningAlgorithm) {
         self.algorithm = algorithm
@@ -31,11 +33,22 @@ class Predictor : ObservableObject {
         self.timer = Timer.scheduledTimer(timeInterval: Predictor.Interval, target: self, selector: #selector(self.predictHandler),
                                           userInfo: nil, repeats: true)
         NotificationCenter.default.addObserver(self, selector: #selector(self.updateRealPosHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
+        print("[INF] Predictor Ready")
     }
     
     func predict(txs: [TX]) {
         if let pos = self.algorithm.predict(txs: txs) {
             if self.algorithm.isValid {
+                /// apply kalman filter
+                if self.kalmanFilter == nil {
+                    /// ISSUE: this pos might contain in correct timestamp
+                    self.kalmanFilter = KalmanFilter(pos: pos)
+                } else {
+                    if let pos = self.kalmanFilter?.predict(pos: pos) {
+                        self.updatePredPos(pos: pos)
+                        return
+                    }
+                }
                 self.updatePredPos(pos: pos)
             }
         }
@@ -69,6 +82,13 @@ class Predictor : ObservableObject {
     }
     /// Update the gound truth position
     func updateRealPos(pos: Position) {
+        if let realPos = self.realPos {
+            /// limit the update frequency for ground true
+            if pos.t - realPos.t < Predictor.minRealPosUpdateInterval {
+                return
+            }
+        }
+        
         self.realPos = pos
         self.realPoses.append(pos)
         if self.realPoses.count > Predictor.maxNumRealPos {
@@ -89,8 +109,11 @@ class Predictor : ObservableObject {
     /// Notification
     @objc private func updateRealPosHandler(notification: Notification) {
         if let userInfo = notification.userInfo {
-            if let x = userInfo["x"] as? Double, let y = userInfo["y"] as? Double, let z = userInfo["z"] as? Double {
-                let pos = Position(x: x / 100.0, y: y / 100.0, z: z / 100.0)
+            if let x = userInfo["x"] as? Double,
+                let y = userInfo["y"] as? Double,
+                let z = userInfo["z"] as? Double,
+                let t = userInfo["timestamp"] as? Double {
+                let pos = Position(x: x, y: y, z: z, t: t)
                 /// check if update is required
                 var bUpdate: Bool = false
                 if self.realPos == nil {

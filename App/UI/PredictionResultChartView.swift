@@ -31,7 +31,7 @@ struct PredictionResultChartView: View {
             .chartSymbolScale([Constant.GroundTruth: .circle, Constant.Prediction: .cross])
             .chartXScale(domain: ClosedRange(uncheckedBounds: (lower: -6.0, upper: 6)))
             .chartYScale(domain: ClosedRange(uncheckedBounds: (lower: -6.0, upper: 6)))
-            .chartLegend(position: .topTrailing, alignment: .topTrailing, spacing: 10)
+            .chartLegend(position: .top, alignment: .topTrailing, spacing: 10)
             .chartXAxis{
                 AxisMarks() {
                     AxisTick()

@@ -73,20 +73,9 @@ public class Mat : Equatable {
         return m
     }
     
-//    /// addElement Function
-//    /// ===================
-//    /// Add double value on (i,j) position in matrix
-//    ///
-//    /// - parameters:
-//    ///   - row: row of matrix
-//    ///   - col: column of matrix
-//    ///   - value: double value to add in matrix
-//    /// - returns: if operation success
-//    public func addElement(row:Int,col:Int,value:Double) {
-//        if self.indexIsValid(row: row, col: col) {
-//            self.matrix[row, col] = value
-//        }
-//    }
+    static public func makeZeroMatrix(rows: Int, cols: Int) -> Mat {
+        return Mat(rows: rows, cols: cols)
+    }
     
     /// setMatrix Function
     /// ==================
@@ -102,27 +91,6 @@ public class Mat : Equatable {
         }
     }
     
-//    /// getElement Function
-//    /// ===================
-//    /// Returns double value on specific position of matrix
-//    ///
-//    /// - parameters:
-//    ///   - i: row of matrix
-//    ///   - j: column of matrix
-//
-//    public func getElement(i:Int,j:Int) -> Double?
-//    {
-//        if self.matrix.rows <= i && self.matrix.columns <= j
-//        {
-//            return self.matrix[i,j]
-//        }
-//        else
-//        {
-//            print("error")
-//            return nil
-//        }
-//    }
-//
     private func indexIsValid(row: Int, col: Int) -> Bool {
         return row >= 0 && row < self.rows && col >= 0 && col <= self.cols
     }
@@ -222,6 +190,18 @@ public class Mat : Equatable {
     /// - returns: result Mat of multiplication operation
     static public func *(lhs:Mat, rhs:Mat) -> Mat? {
         return Mat(matrix: Surge.mul(lhs.matrix, rhs.matrix))
+    }
+    
+    /// Predefined * operator
+    /// =====================
+    /// Returns result Mat of multiplication operation
+    ///
+    /// - parameters:
+    ///   - lhs: left multiplication Mat operand
+    ///   - rhs: right multiplication Mat operand
+    /// - returns: result Mat of multiplication operation
+    static public func * (lhs:Double, rhs: Mat) -> Mat? {
+        return Mat(matrix: Surge.mul(lhs, rhs.matrix))
     }
     
     /// Predefined == operator
