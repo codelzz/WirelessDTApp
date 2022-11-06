@@ -2,9 +2,11 @@
 # platform :ios, '16.0'
 
 target 'App' do
-  # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+  pod 'Surge', '~> 2.3.2'
+end
 
-  # Pods for App
+target 'AppTests' do
+  use_frameworks!
   pod 'Surge', '~> 2.3.2'
 end

@@ -10,7 +10,7 @@
 import Foundation
 import Surge
 
-class Mat {
+public class Mat : Equatable {
     //MARK: - Matrix properties
     
     /// Number of Rows in Matrix
@@ -18,15 +18,16 @@ class Mat {
     /// Number of Columns in Matrix
     private var cols: Int
     /// Surge Matrix object
-    var matrix:Matrix<Double> {
-        set(newValue) {
-            self.matrix = newValue
-            /// always synchronize the shape when Matrix update
-            self.rows = self.matrix.rows
-            self.cols = self.matrix.columns
+    private var _matrix:Matrix<Double> = [[0.0]]
+    private var matrix:Matrix<Double> {
+        set {
+            /// synchronize the shape
+            self.rows = newValue.rows
+            self.cols = newValue.columns
+            self._matrix = newValue
         }
         get {
-            return self.matrix
+            return self._matrix
         }
     }
     
@@ -37,17 +38,18 @@ class Mat {
     
     //MARK: - Initialization
     
-    /// Initailization of matrix with specified numbers of rows and columns
+    /// Initailization of Mat with specified numbers of rows and columns
     init(rows: Int, cols: Int) {
         self.rows = rows
         self.cols = cols
         self.matrix = Matrix(rows: self.rows, columns: self.cols, repeatedValue: 0.0)
     }
     
+    /// Initailization of Mat with matrix
     init(matrix: Matrix<Double>) {
         self.rows = matrix.rows
         self.cols = matrix.columns
-        self.matrix = matrix
+        self.matrix = Matrix(matrix)
     }
     
     //MARK: - Matrix Method
@@ -59,7 +61,7 @@ class Mat {
     /// - parameters:
     ///   - dim: dimension of desired identity matrix
     /// - returns: identity matrix object
-    static func makeIdentityMatrix(dim:Int) -> Mat {
+    static public func makeIdentityMatrix(dim:Int) -> Mat {
         let m = Mat(rows: dim, cols: dim)
         for i in 0..<dim {
             for j in 0..<dim {
@@ -92,7 +94,7 @@ class Mat {
     ///
     /// - parameters:
     ///   - matrix: array of array of double values
-    func setMatrix(matrix:[[Double]]) {
+    public func setMatrix(matrix:[[Double]]) {
         if self.matrix.rows > 0 {
             if (matrix.count == self.matrix.rows) && (matrix[0].count == self.matrix.columns) {
                 self.matrix = Matrix<Double>(matrix)
@@ -125,11 +127,11 @@ class Mat {
         return row >= 0 && row < self.rows && col >= 0 && col <= self.cols
     }
     
-    func isSquareMatrix() -> Bool {
+    public func isSquareMatrix() -> Bool {
         return self.rows > 0 && self.rows == self.cols
     }
     
-    func hasSameShape(with: Mat) -> Bool {
+    public func hasSameShape(with: Mat) -> Bool {
         return self.rows == with.rows && self.cols == with.cols
     }
     
@@ -138,10 +140,8 @@ class Mat {
     /// Returns transposed matrix
     ///
     /// - returns: transposed Mat
-    func transpose() -> Mat? {
-        let m = Mat(rows: self.cols, cols: self.rows)
-        m.matrix = Surge.transpose(self.matrix)
-        return m
+    public func T() -> Mat? {
+        return Mat(matrix: Surge.transpose(self.matrix))
     }
     
     /// Inverse Matrix Function
@@ -149,17 +149,15 @@ class Mat {
     /// Returns inverse matrix
     ///
     /// - returns: inverse matrix object
-    func inverseMatrix() -> Mat? {
+    public func inv() -> Mat? {
         assert(self.isSquareMatrix(), "[ERR] Attempt to inverse non-square matrix")
-        let m = Mat(rows: self.rows, cols: self.cols)
-        m.matrix = Surge.inv(self.matrix)
-        return m
+        return Mat(matrix: Surge.inv(self.matrix))
     }
     
     /// Print Matrix Function
     /// =====================
     /// Printing the entire matrix
-    func debugprint() {
+    public func debugprint() {
         for i in 0..<self.rows {
             for j in 0..<self.cols {
                 print("\(self[i,j]) ")
@@ -196,11 +194,9 @@ class Mat {
     ///   - lhs: left addition Mat operand
     ///   - rhs: right addition Mat operand
     /// - returns: result Mat of addition operation
-    static func +(lhs:Mat, rhs:Mat) -> Mat? {
+    static public func +(lhs:Mat, rhs:Mat) -> Mat? {
         assert(lhs.hasSameShape(with: rhs), "[ERROR] Attampt to add matrix with different shape")
-        let m = Mat(rows: lhs.rows, cols: lhs.cols)
-        m.matrix = Surge.add(lhs.matrix, rhs.matrix)
-        return m
+        return Mat(matrix: Surge.add(lhs.matrix, rhs.matrix))
     }
     
     /// Predefined - operator
@@ -211,10 +207,9 @@ class Mat {
     ///   - lhs: left subtraction Mat operand
     ///   - rhs: right addition Mat operand
     /// - returns: result Mat object of subtraction operation
-    static func -(lhs:Mat, rhs:Mat) ->Mat? {
+    static public func -(lhs:Mat, rhs:Mat) -> Mat? {
         assert(lhs.hasSameShape(with: rhs), "[ERROR] Attampt to subtract matrix with different shape")
-        let m = Mat(matrix: Surge.mul(-1.0, rhs.matrix))
-        return lhs + m
+        return lhs + Mat(matrix: Surge.mul(-1.0, rhs.matrix))
     }
     
     /// Predefined * operator
@@ -225,7 +220,19 @@ class Mat {
     ///   - lhs: left multiplication Mat operand
     ///   - rhs: right multiplication Mat operand
     /// - returns: result Mat of multiplication operation
-    static func *(lhs:Mat, rhs:Mat) -> Mat? {
+    static public func *(lhs:Mat, rhs:Mat) -> Mat? {
         return Mat(matrix: Surge.mul(lhs.matrix, rhs.matrix))
+    }
+    
+    /// Predefined == operator
+    /// =====================
+    /// Returns result Mat of multiplication operation
+    ///
+    /// - parameters:
+    ///   - lhs: left multiplication Mat operand
+    ///   - rhs: right multiplication Mat operand
+    /// - returns: result Mat of multiplication operation
+    static public func == (lhs:Mat, rhs:Mat) -> Bool {
+        return lhs.matrix == rhs.matrix
     }
 }
