@@ -1,0 +1,16 @@
+PODS:
+  - Surge (2.3.2)
+
+DEPENDENCIES:
+  - Surge (~> 2.3.2)
+
+SPEC REPOS:
+  trunk:
+    - Surge
+
+SPEC CHECKSUMS:
+  Surge: bd84c931a09caa001312ea35059751f2036c49c4
+
+PODFILE CHECKSUM: 0b59e65eb7fac3dc055594d966e6a5c09f052783
+
+COCOAPODS: 1.11.3
