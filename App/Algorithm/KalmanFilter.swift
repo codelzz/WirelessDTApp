@@ -10,6 +10,9 @@ import Foundation
 
 class KalmanFilter {
     //MARK: - KalmanFilter properties
+    
+    /// reduce the delay of kalmans
+    private let intervalGain: Double = 5
 
     /// The dimension M of the state vector
     private let dimM = 6
@@ -18,8 +21,8 @@ class KalmanFilter {
 
     /// Acceleration variance magnitude for GPS
     /// ======================================
-    /// **Sigma** value is  value for Acceleration Noise Magnitude Matrix (Qt).
-    private let sigma = 0.0625
+    /// **Sigma** value is  value for Acceleration Noise Magnitude Matrix (Qt). Default = 0.06
+    private let sigma = 0.01
 
     /// Value for Sensor Noise Covariance Matrix
     /// ========================================
@@ -35,7 +38,7 @@ class KalmanFilter {
             return _rValue
         }
     }
-    private var _rValue: Double = 20.0
+    private var _rValue: Double = 100
 
     /// Previous State Vector
     /// =====================
@@ -97,9 +100,9 @@ class KalmanFilter {
         /// zt (M, N)
         self.zt = Mat(rows: self.dimM, cols: self.dimN)
     }
-    
+
     //MARK: - KalmanFilter methods
-    
+
     /// Predict Current Position
     /// ========================
     ///  This function is a main. **processState** will be processed current location of user by Kalman Filter
@@ -109,7 +112,11 @@ class KalmanFilter {
     /// - returns: position with corrected x, y and z values
     func predict(pos: Position) -> Position {
         /// Calculate interval between last and current measure
-        let interval = pos.t - self.prevPos.t
+        var interval = pos.t - self.prevPos.t
+        
+        // [WHY] why it work?
+        interval = interval * self.intervalGain/// constant
+        
         /// Calculate and set Prediction Step Matrix based on new interval value
         A.setMatrix(matrix:[[1,interval,0,0,0,0],
                             [0,1,0,0,0,0],
@@ -133,17 +140,17 @@ class KalmanFilter {
         let vx = (self.prevPos.x - pos.x) / interval
         let vy = (self.prevPos.y - pos.y) / interval
         let vz = (self.prevPos.z - pos.z) / interval
-        
+
         // Set Measured State Vector; current x, y, z and vx, vy and vz
         zt.setMatrix(matrix:[[pos.x],[vx],[pos.y],[vy],[pos.z],[vz]])
-        
+
         // Set previous Location and Measure Time for next step of processState function.
         self.prevPos = pos
-        
+
         // Return value of kalmanFilter
         return self.step()
     }
-    
+
     /// Kalman Filter Function
     /// ======================
     /// This is additional function, which helps in the process of correcting location
@@ -161,7 +168,7 @@ class KalmanFilter {
         let Pk = self.A * self.Pk1 * self.A.T + self.Qt
         let tmp = Pk + self.R
         let Kt = Pk * tmp.inv // Kalman gain (Kt)
-        let xt = xk + Kt * (zt - xk)
+        let xt = xk + (Kt * (zt - xk))
         let Pt = (Mat.makeIdentityMatrix(dim: self.dimM) - Kt) * Pk
         self.xk1 = xt
         self.Pk1 = Pt

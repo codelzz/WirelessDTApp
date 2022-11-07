@@ -18,17 +18,18 @@ class LeastSquares {
     ///   - points: the position of corresponding transitter position
     /// - returns: x coordinate, y coordinate, accuracy
     static func fit(distances: [Double], points: [[Double]]) -> (Mat?, Double) {
-        /// Get Matrix A
+        /// Matrix A
         let A = Mat(matrix: [[2 * (points[0][0] - points[2][0]), 2 * (points[0][1] - points[2][1])],
                              [2 * (points[1][0] - points[2][0]), 2 * (points[1][1] - points[2][1])]])
-        /// Get Matrix B
+        /// Matrix B
         let B = Mat(matrix: [
             [pow(points[0][0], 2) - pow(points[2][0], 2) + pow(points[0][1], 2) - pow(points[2][1], 2) + pow(distances[2], 2) - pow(distances[0], 2)],
             [pow(points[1][0], 2) - pow(points[2][0], 2) + pow(points[1][1], 2) - pow(points[2][1], 2) + pow(distances[2], 2) - pow(distances[1], 2)]])
-        /// Get the product of (matrix A) and (The transpose of matrix A, which is matrix A2 )
-        if (A.T * A).det == nil {
+        /// Check if A is Inversable
+        guard (A.T * A).det != nil else {
             return (nil, Double.infinity)
         }
+        /// Calculate the result
         let m = ((A.T * A).inv * A.T * B).T
         /// Use mean square error to esitmate accuracy
         var accuracy: Double = 0.0
@@ -37,6 +38,6 @@ class LeastSquares {
             accuracy += pow(d - distances[i], 2)
         }
         accuracy = sqrt(accuracy) / 3.0
-        return (m, Double.infinity)
+        return (m, accuracy)
     }
 }

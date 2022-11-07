@@ -65,7 +65,7 @@ final class AppTests: XCTestCase {
     func testVectorMultiplication() {
         let lhs = Mat(matrix: [[1,2,3]])
         let rhs = Mat(matrix: [[1,2,3]])
-        let answer = lhs * rhs.T!
+        let answer = lhs * rhs.T
         let result = Mat(matrix: [[14.0]])
         XCTAssertEqual(result, answer)
     }

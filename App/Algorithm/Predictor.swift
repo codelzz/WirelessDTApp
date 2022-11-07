@@ -11,15 +11,16 @@ import Surge
 class Predictor : ObservableObject {
     let algorithm: PositioningAlgorithm
     var kalmanFilter: KalmanFilter?
-    /// timer
-    static let Interval:Double = 0.05
-    var timer: Timer?
+    var enableKalmanFilter: Bool = false
+    /// prediction control
+    private var predInterval:Double = 0.01
+    private var prevPredTime:Double = Date().timeIntervalSince1970
     /// data
     @Published var pos: Position?       /// pos save the prediction result
     var refPos: Position?               /// refPos the realPos collected when prediction is done, it is use for evaluate square error
     @Published var realPos: Position?   /// realPos store the latest ground truth data
-    static let maxNumRealPos: Int = 50
-    static let maxNumPredPos: Int = 30
+    static let maxNumRealPos: Int = 100
+    static let maxNumPredPos: Int = 50
     var realPoses: [Position] = []
     var predPoses: [Position] = []
     static let minRealPosUpdateInterval: Double = 0.15
@@ -30,42 +31,74 @@ class Predictor : ObservableObject {
     
     init(algorithm: PositioningAlgorithm) {
         self.algorithm = algorithm
-        /// set timer
-        self.timer = Timer.scheduledTimer(timeInterval: Predictor.Interval, target: self, selector: #selector(self.predictHandler),
-                                          userInfo: nil, repeats: true)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateRealPosHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didRecvDataHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
         print("[INF] Predictor Ready")
     }
     
     func predict(txs: [TX]) {
         if let pos = self.algorithm.predict(txs: txs) {
             if self.algorithm.isValid {
-                /// apply kalman filter
-//                if self.kalmanFilter == nil {
-//                    /// ISSUE: this pos might contain in correct timestamp
-//                    self.kalmanFilter = KalmanFilter(pos: pos)
-//                } else {
-//                    if let pos = self.kalmanFilter?.predict(pos: pos) {
-//                        self.updatePredPos(pos: pos)
-//                        return
-//                    }
-//                }
+                if enableKalmanFilter {
+                    /// apply kalman filter
+                    if self.kalmanFilter == nil {
+                        /// ISSUE: this pos might contain in correct timestamp
+                        self.kalmanFilter = KalmanFilter(pos: pos)
+                    } else {
+                        if let pos = self.kalmanFilter?.predict(pos: pos) {
+                            self.updatePredPos(pos: pos)
+                            return
+                        }
+                    }
+                }
                 self.updatePredPos(pos: pos)
             }
         }
     }
     
-    @objc func predictHandler()
-    {
-        self.predict(txs: TXManager.shared().getDetectableTXs())
+    @objc func didRecvDataHandler(notification: Notification) {
+        /// handle ground truth update
+        if let userInfo = notification.userInfo {
+            if let x = userInfo["x"] as? Double,
+                let y = userInfo["y"] as? Double,
+                let z = userInfo["z"] as? Double,
+                let t = userInfo["timestamp"] as? Double {
+                let pos = Position(x: x, y: y, z: z, t: t)
+                /// check if update is required
+                var bUpdate: Bool = false
+                if self.realPos == nil {
+                    bUpdate = true
+                } else if let prevPos = self.realPos {
+                    if prevPos != pos {
+                        bUpdate = true
+                    }
+                }
+                /// update if necessary
+                if bUpdate {
+                    DispatchQueue.main.async {
+                        self.updateRealPos(pos: pos)
+                    }
+                }
+            }
+        }
+        
+        DispatchQueue.main.async {
+            /// handle prediction only exceed prediction interval
+            let now = Date().timeIntervalSince1970
+            guard now - self.prevPredTime > self.predInterval else {
+                return
+            }
+            self.predict(txs: TXManager.shared().getDetectableTXs())
+            self.prevPredTime = now
+        }
     }
-    
+
     func getSquareError() -> Double? {
         if let pos = self.pos, let realPos = self.refPos {
             return Position.xyDistance(lhs: pos, rhs: realPos)
         }
         return nil
     }
+    
     /// Update the prediction position
     func updatePredPos(pos: Position) {
         if let prevPos = self.pos {
@@ -103,33 +136,6 @@ class Predictor : ObservableObject {
             self.squareErrors.append(error)
             if self.squareErrors.count > Predictor.maxNumSquareErr {
                 self.squareErrors.remove(at: 0)
-            }
-        }
-    }
-    
-    /// Notification
-    @objc private func updateRealPosHandler(notification: Notification) {
-        if let userInfo = notification.userInfo {
-            if let x = userInfo["x"] as? Double,
-                let y = userInfo["y"] as? Double,
-                let z = userInfo["z"] as? Double,
-                let t = userInfo["timestamp"] as? Double {
-                let pos = Position(x: x, y: y, z: z, t: t)
-                /// check if update is required
-                var bUpdate: Bool = false
-                if self.realPos == nil {
-                    bUpdate = true
-                } else if let prevPos = self.realPos {
-                    if prevPos != pos {
-                        bUpdate = true
-                    }
-                }
-                /// update if necessary
-                if bUpdate {
-                    DispatchQueue.main.async {
-                        self.updateRealPos(pos: pos)
-                    }
-                }
             }
         }
     }

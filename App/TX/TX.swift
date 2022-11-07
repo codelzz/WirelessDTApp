@@ -24,9 +24,15 @@ struct RSSIMeasurement: Identifiable {
     let timestamp: Double
     
     static let example = RSSIMeasurement(rssi: -27, timestamp: 1667531183.068)
+    
+    public func copy() -> RSSIMeasurement {
+        let copy = RSSIMeasurement(rssi: rssi, timestamp: timestamp)
+        return copy
+    }
 }
 
 class TX : ObservableObject, Identifiable, Comparable {
+    //MARK: - TX Properties
     var id: String { info.name }
     let info: TXInfo
     @Published var rssi: Int?
@@ -42,6 +48,8 @@ class TX : ObservableObject, Identifiable, Comparable {
     init(info: TXInfo) {
         self.info = info
     }
+    
+    //MARK: - TX Methods
     
     func update(rssi: Int, timestamp: Double)
     {
@@ -61,6 +69,16 @@ class TX : ObservableObject, Identifiable, Comparable {
         return self.rssi != nil && self.rssi! > TX.minRssi
     }
     
+    public func copy() -> TX {
+        let copy = TX(info: self.info)
+        copy.rssis = self.rssis.map{ $0.copy() }
+        copy.rssi = self.rssi
+        copy.timestamp = self.timestamp
+        return copy
+    }
+
+    //MARK: - TX Operator Method
+    
     static func < (lhs: TX, rhs: TX) -> Bool {
         let lhsRSSI = lhs.rssi ?? TX.minRssi;
         let rhsRSSI = rhs.rssi ?? TX.minRssi;
@@ -68,8 +86,13 @@ class TX : ObservableObject, Identifiable, Comparable {
     }
     
     static func == (lhs: TX, rhs: TX) -> Bool {
-        let lhsRSSI = lhs.rssi ?? TX.minRssi;
-        let rhsRSSI = rhs.rssi ?? TX.minRssi;
+        /// ensure rssi is valid
+        guard lhs.rssi != nil && rhs.rssi != nil else {
+            return false
+        }
+        let lhsRSSI = lhs.rssi!;
+        let rhsRSSI = rhs.rssi!;
         return lhsRSSI == rhsRSSI
     }
+    
 }

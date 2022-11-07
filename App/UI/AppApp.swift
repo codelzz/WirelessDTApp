@@ -12,7 +12,7 @@ struct AppApp: App {
     /// initialize the singleton
     let sync = WiTracingSync.shared()
     /// environment object
-    @StateObject var predictor = Predictor(algorithm: Trilateration())
+    @StateObject var predictor = Predictor(algorithm: SmoothSwapTrilateration())
     @State private var selection = 1
 
     var body: some Scene {
@@ -40,10 +40,3 @@ struct AppApp: App {
         }
     }
 }
-
-struct Previews_AppApp_Previews: PreviewProvider {
-    static var previews: some View {
-        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
-    }
-}
-
