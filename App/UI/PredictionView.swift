@@ -14,13 +14,11 @@ struct PredictionView: View {
         VStack{
             /// Header
             HeaderView(title: "Prediction", subTitle: "Position Estimation", titleImage: "target")
-            Text("Real-time Prediction")
-                .fontWeight(.semibold)
             PredictionResultChartView()
-            /// Square Error Histogram
-            Text("Square Error Histogram")
-                .fontWeight(.semibold)
-            PredictionSqureErrorChartView(data: Histogram.generate(data: predictor.squareErrors, bins: 100, min: 0, max: 6))
+            /// Probability Distribution
+            PredictionPDFChartView(data: Statistics.PDF(data: predictor.squareErrors, step: 0.1, min: 0.0, max: 10.0))
+            /// Cumulative Distribution
+            PredictionCDFChartView(data: Statistics.CDF(data: predictor.squareErrors, step: 0.1, min: 0.0, max: 10.0))
             /// Summary
             HStack {
                 if let pos = predictor.pos, let err = predictor.squareError {

@@ -11,7 +11,7 @@ class Trilateration : PositioningAlgorithm {
     
     //MARK: - Trilateration properties
     static let maxSpeed: Double = 10.0 /// 5 m/s
-    static let minNumMeasurement: Int = 5
+    static let minNumMeasurement: Int = 4
 
     var prevPos: Position?
     var prevT: Double = NSDate().timeIntervalSince1970

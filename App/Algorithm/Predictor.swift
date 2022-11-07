@@ -11,7 +11,7 @@ import Surge
 class Predictor : ObservableObject {
     let algorithm: PositioningAlgorithm
     var kalmanFilter: KalmanFilter?
-    var enableKalmanFilter: Bool = false
+    var enableKalmanFilter: Bool = true
     /// prediction control
     private var predInterval:Double = 0.01
     private var prevPredTime:Double = Date().timeIntervalSince1970
@@ -19,7 +19,7 @@ class Predictor : ObservableObject {
     @Published var pos: Position?       /// pos save the prediction result
     var refPos: Position?               /// refPos the realPos collected when prediction is done, it is use for evaluate square error
     @Published var realPos: Position?   /// realPos store the latest ground truth data
-    static let maxNumRealPos: Int = 100
+    static let maxNumRealPos: Int = 50
     static let maxNumPredPos: Int = 50
     var realPoses: [Position] = []
     var predPoses: [Position] = []

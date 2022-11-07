@@ -20,13 +20,15 @@
 		178774EF29163876008CC1C8 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774EE29163876008CC1C8 /* HeaderView.swift */; };
 		178774F429163E0C008CC1C8 /* WiTracingSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774F329163E0C008CC1C8 /* WiTracingSync.swift */; };
 		178774F6291670A7008CC1C8 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774F5291670A7008CC1C8 /* Constant.swift */; };
-		17D7FC8B2916C5DF002A9153 /* Histogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC8A2916C5DF002A9153 /* Histogram.swift */; };
+		17D7FC8B2916C5DF002A9153 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC8A2916C5DF002A9153 /* Statistics.swift */; };
 		17D7FC8D2916CBF4002A9153 /* PredictionResultChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC8C2916CBF4002A9153 /* PredictionResultChartView.swift */; };
-		17D7FC8F29173AC8002A9153 /* PredictionSqureErrorChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC8E29173AC8002A9153 /* PredictionSqureErrorChartView.swift */; };
+		17D7FC8F29173AC8002A9153 /* PredictionPDFChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC8E29173AC8002A9153 /* PredictionPDFChartView.swift */; };
 		17D7FC93291743AE002A9153 /* KalmanFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC92291743AE002A9153 /* KalmanFilter.swift */; };
 		17D7FC95291743C5002A9153 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC94291743C5002A9153 /* Matrix.swift */; };
 		17D7FC9D29176803002A9153 /* AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC9C29176803002A9153 /* AppTests.swift */; };
 		17D7FCA32917695D002A9153 /* Matrix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FC94291743C5002A9153 /* Matrix.swift */; };
+		17D7FCA52918EDC5002A9153 /* PredictionCDFChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCA42918EDC5002A9153 /* PredictionCDFChartView.swift */; };
+		17D7FCA82918FDEA002A9153 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCA72918FDEA002A9153 /* DoubleExtension.swift */; };
 		17ED34872913AAA800FAD24B /* TX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34862913AAA800FAD24B /* TX.swift */; };
 		17ED348D2913BEA100FAD24B /* tx_info.json in Resources */ = {isa = PBXBuildFile; fileRef = 17ED348C2913BEA000FAD24B /* tx_info.json */; };
 		17ED348F2913F1EF00FAD24B /* TXListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED348E2913F1EF00FAD24B /* TXListView.swift */; };
@@ -64,13 +66,15 @@
 		178774EE29163876008CC1C8 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		178774F329163E0C008CC1C8 /* WiTracingSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiTracingSync.swift; sourceTree = "<group>"; };
 		178774F5291670A7008CC1C8 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
-		17D7FC8A2916C5DF002A9153 /* Histogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Histogram.swift; sourceTree = "<group>"; };
+		17D7FC8A2916C5DF002A9153 /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
 		17D7FC8C2916CBF4002A9153 /* PredictionResultChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionResultChartView.swift; sourceTree = "<group>"; };
-		17D7FC8E29173AC8002A9153 /* PredictionSqureErrorChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionSqureErrorChartView.swift; sourceTree = "<group>"; };
+		17D7FC8E29173AC8002A9153 /* PredictionPDFChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionPDFChartView.swift; sourceTree = "<group>"; };
 		17D7FC92291743AE002A9153 /* KalmanFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalmanFilter.swift; sourceTree = "<group>"; };
 		17D7FC94291743C5002A9153 /* Matrix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Matrix.swift; sourceTree = "<group>"; };
 		17D7FC9A29176803002A9153 /* AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		17D7FC9C29176803002A9153 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
+		17D7FCA42918EDC5002A9153 /* PredictionCDFChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionCDFChartView.swift; sourceTree = "<group>"; };
+		17D7FCA72918FDEA002A9153 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		17ED34862913AAA800FAD24B /* TX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TX.swift; sourceTree = "<group>"; };
 		17ED348C2913BEA000FAD24B /* tx_info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = tx_info.json; path = Data/tx_info.json; sourceTree = "<group>"; };
 		17ED348E2913F1EF00FAD24B /* TXListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TXListView.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 		1700C2F429138A0C004824E9 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				17D7FCA62918FDD6002A9153 /* Extension */,
 				178774DB2915084F008CC1C8 /* Algorithm */,
 				17ED349D2914B62A00FAD24B /* TX */,
 				17ED34912913F40100FAD24B /* UI */,
@@ -158,7 +163,7 @@
 				178774DC29150885008CC1C8 /* Trilateration.swift */,
 				178774E429152B35008CC1C8 /* Signal.swift */,
 				178774E829155CDE008CC1C8 /* Predictor.swift */,
-				17D7FC8A2916C5DF002A9153 /* Histogram.swift */,
+				17D7FC8A2916C5DF002A9153 /* Statistics.swift */,
 				17D7FC92291743AE002A9153 /* KalmanFilter.swift */,
 				17D7FC94291743C5002A9153 /* Matrix.swift */,
 			);
@@ -181,6 +186,14 @@
 			path = AppTests;
 			sourceTree = "<group>";
 		};
+		17D7FCA62918FDD6002A9153 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				17D7FCA72918FDEA002A9153 /* DoubleExtension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		17ED34912913F40100FAD24B /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,7 +202,8 @@
 				17ED34922913F48900FAD24B /* MonitorView.swift */,
 				178774EC291636C7008CC1C8 /* PredictionView.swift */,
 				17D7FC8C2916CBF4002A9153 /* PredictionResultChartView.swift */,
-				17D7FC8E29173AC8002A9153 /* PredictionSqureErrorChartView.swift */,
+				17D7FC8E29173AC8002A9153 /* PredictionPDFChartView.swift */,
+				17D7FCA42918EDC5002A9153 /* PredictionCDFChartView.swift */,
 				17ED348E2913F1EF00FAD24B /* TXListView.swift */,
 				178774D9291500C6008CC1C8 /* TXListItemView.swift */,
 				17ED34942913F58500FAD24B /* SettingsView.swift */,
@@ -423,9 +437,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				178774DF291511F9008CC1C8 /* Position.swift in Sources */,
-				17D7FC8F29173AC8002A9153 /* PredictionSqureErrorChartView.swift in Sources */,
+				17D7FC8F29173AC8002A9153 /* PredictionPDFChartView.swift in Sources */,
+				17D7FCA52918EDC5002A9153 /* PredictionCDFChartView.swift in Sources */,
 				17ED34952913F58500FAD24B /* SettingsView.swift in Sources */,
 				17ED34932913F48900FAD24B /* MonitorView.swift in Sources */,
+				17D7FCA82918FDEA002A9153 /* DoubleExtension.swift in Sources */,
 				178774E929155CDE008CC1C8 /* Predictor.swift in Sources */,
 				17ED349A291479D000FAD24B /* UDPAgent.swift in Sources */,
 				178774EF29163876008CC1C8 /* HeaderView.swift in Sources */,
@@ -440,7 +456,7 @@
 				178774F429163E0C008CC1C8 /* WiTracingSync.swift in Sources */,
 				17D7FC93291743AE002A9153 /* KalmanFilter.swift in Sources */,
 				178774ED291636C7008CC1C8 /* PredictionView.swift in Sources */,
-				17D7FC8B2916C5DF002A9153 /* Histogram.swift in Sources */,
+				17D7FC8B2916C5DF002A9153 /* Statistics.swift in Sources */,
 				178774E7291556C6008CC1C8 /* LeastSquares.swift in Sources */,
 				17ED349F2914B64100FAD24B /* TXManager.swift in Sources */,
 				17ED348F2913F1EF00FAD24B /* TXListView.swift in Sources */,

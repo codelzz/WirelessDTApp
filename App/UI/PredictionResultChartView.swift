@@ -12,6 +12,9 @@ struct PredictionResultChartView: View {
     @EnvironmentObject var predictor:Predictor
 
     var body: some View {
+        Text("Real-time Prediction")
+            .fontWeight(.semibold)
+            .font(.caption)
         /// Chart
         Chart {
             /// IMPORTANT: We need to swap x-y to match the game map in unreal
