@@ -14,18 +14,11 @@ struct Position : Identifiable, Equatable {
     let z:Double
     let t:Double
     
-    init(x: Double, y: Double, z: Double, t: Double = Date().timeIntervalSince1970) {
+    init(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0, t: Double = Date().timeIntervalSince1970) {
         self.x = x
         self.y = y
         self.z = z
         self.t = t
-    }
-    
-    init() {
-        self.x = 0.0
-        self.y = 0.0
-        self.z = 0.0
-        self.t = Date().timeIntervalSince1970
     }
     
     static let example: Position = Position(x: 0, y: 0, z: 0, t:0)

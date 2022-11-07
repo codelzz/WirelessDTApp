@@ -93,7 +93,7 @@ class KalmanFilter {
         /// Qt (M, M)
         self.Qt = Mat(rows: self.dimM, cols: self.dimM)
         /// R (M, M) --- sensor noise covariance matrix
-        self.R = (self._rValue * Mat.makeIdentityMatrix(dim: self.dimM))!
+        self.R = self._rValue * Mat.makeIdentityMatrix(dim: self.dimM)
         /// zt (M, N)
         self.zt = Mat(rows: self.dimM, cols: self.dimN)
     }
@@ -158,13 +158,13 @@ class KalmanFilter {
     /// algorithm can calculate new state, and function return corrected x, y and z values in Position .
     private func step() -> Position {
         let xk = self.A * self.xk1
-        let Pk = ((self.A*self.Pk1)! * self.A.T()!)! + self.Qt
-        let tmp = Pk! + self.R
-        let Kt = Pk!*(tmp?.inv())! // Kalman gain (Kt)
-        let xt = xk! + (Kt! * (zt - xk!)!)!
-        let Pt = (Mat.makeIdentityMatrix(dim: self.dimM) - Kt!)! * Pk!
-        self.xk1 = xt!
-        self.Pk1 = Pt!
+        let Pk = self.A * self.Pk1 * self.A.T + self.Qt
+        let tmp = Pk + self.R
+        let Kt = Pk * tmp.inv // Kalman gain (Kt)
+        let xt = xk + Kt * (zt - xk)
+        let Pt = (Mat.makeIdentityMatrix(dim: self.dimM) - Kt) * Pk
+        self.xk1 = xt
+        self.Pk1 = Pt
         return Position(x: self.xk1[0,0], y: self.xk1[2,0], z: self.xk1[4,0], t: self.prevPos.t)
     }
 }

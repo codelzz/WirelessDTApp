@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Surge
 
 class Predictor : ObservableObject {
     let algorithm: PositioningAlgorithm
@@ -40,15 +41,15 @@ class Predictor : ObservableObject {
         if let pos = self.algorithm.predict(txs: txs) {
             if self.algorithm.isValid {
                 /// apply kalman filter
-                if self.kalmanFilter == nil {
-                    /// ISSUE: this pos might contain in correct timestamp
-                    self.kalmanFilter = KalmanFilter(pos: pos)
-                } else {
-                    if let pos = self.kalmanFilter?.predict(pos: pos) {
-                        self.updatePredPos(pos: pos)
-                        return
-                    }
-                }
+//                if self.kalmanFilter == nil {
+//                    /// ISSUE: this pos might contain in correct timestamp
+//                    self.kalmanFilter = KalmanFilter(pos: pos)
+//                } else {
+//                    if let pos = self.kalmanFilter?.predict(pos: pos) {
+//                        self.updatePredPos(pos: pos)
+//                        return
+//                    }
+//                }
                 self.updatePredPos(pos: pos)
             }
         }

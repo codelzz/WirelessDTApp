@@ -14,9 +14,9 @@ public class Mat : Equatable {
     //MARK: - Matrix properties
     
     /// Number of Rows in Matrix
-    private var rows: Int
+    public private(set) var rows: Int
     /// Number of Columns in Matrix
-    private var cols: Int
+    public private(set) var cols: Int
     /// Surge Matrix object
     private var _matrix:Matrix<Double> = [[0.0]]
     private var matrix:Matrix<Double> {
@@ -73,6 +73,13 @@ public class Mat : Equatable {
         return m
     }
     
+    /// makeZeroMatrix Function
+    /// ==========================
+    /// For some dimension dim, return identity matrix
+    ///
+    /// - parameters:
+    ///   - dim: dimension of desired zero matrix
+    /// - returns: zero matrix
     static public func makeZeroMatrix(rows: Int, cols: Int) -> Mat {
         return Mat(rows: rows, cols: cols)
     }
@@ -104,23 +111,13 @@ public class Mat : Equatable {
     }
     
     /// Transpose Matrix
-    /// =========================
-    /// Returns transposed matrix
-    ///
-    /// - returns: transposed Mat
-    public func T() -> Mat? {
-        return Mat(matrix: Surge.transpose(self.matrix))
-    }
+    var T:Mat { Mat(matrix: Surge.transpose(self.matrix))}
     
-    /// Inverse Matrix Function
-    /// =======================
-    /// Returns inverse matrix
-    ///
-    /// - returns: inverse matrix object
-    public func inv() -> Mat? {
-        assert(self.isSquareMatrix(), "[ERR] Attempt to inverse non-square matrix")
-        return Mat(matrix: Surge.inv(self.matrix))
-    }
+    /// Inverse Matrix
+    var inv: Mat { Mat(matrix: Surge.inv(self.matrix)) }
+    
+    /// Determinant
+    var det: Double? { Surge.det(self.matrix)}
     
     /// Print Matrix Function
     /// =====================
@@ -162,7 +159,7 @@ public class Mat : Equatable {
     ///   - lhs: left addition Mat operand
     ///   - rhs: right addition Mat operand
     /// - returns: result Mat of addition operation
-    static public func +(lhs:Mat, rhs:Mat) -> Mat? {
+    static public func +(lhs:Mat, rhs:Mat) -> Mat {
         assert(lhs.hasSameShape(with: rhs), "[ERROR] Attampt to add matrix with different shape")
         return Mat(matrix: Surge.add(lhs.matrix, rhs.matrix))
     }
@@ -175,7 +172,7 @@ public class Mat : Equatable {
     ///   - lhs: left subtraction Mat operand
     ///   - rhs: right addition Mat operand
     /// - returns: result Mat object of subtraction operation
-    static public func -(lhs:Mat, rhs:Mat) -> Mat? {
+    static public func -(lhs:Mat, rhs:Mat) -> Mat {
         assert(lhs.hasSameShape(with: rhs), "[ERROR] Attampt to subtract matrix with different shape")
         return lhs + Mat(matrix: Surge.mul(-1.0, rhs.matrix))
     }
@@ -188,7 +185,7 @@ public class Mat : Equatable {
     ///   - lhs: left multiplication Mat operand
     ///   - rhs: right multiplication Mat operand
     /// - returns: result Mat of multiplication operation
-    static public func *(lhs:Mat, rhs:Mat) -> Mat? {
+    static public func *(lhs:Mat, rhs:Mat) -> Mat {
         return Mat(matrix: Surge.mul(lhs.matrix, rhs.matrix))
     }
     
@@ -200,7 +197,7 @@ public class Mat : Equatable {
     ///   - lhs: left multiplication Mat operand
     ///   - rhs: right multiplication Mat operand
     /// - returns: result Mat of multiplication operation
-    static public func * (lhs:Double, rhs: Mat) -> Mat? {
+    static public func * (lhs:Double, rhs: Mat) -> Mat {
         return Mat(matrix: Surge.mul(lhs, rhs.matrix))
     }
     

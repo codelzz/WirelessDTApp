@@ -8,7 +8,7 @@
 import Foundation
 
 class Trilateration : PositioningAlgorithm {
-    static let maxSpeed: Double = 50.0 /// 5 m/s
+    static let maxSpeed: Double = 10.0 /// 5 m/s
 
     var prevPos: Position?
     var prevT: Double = NSDate().timeIntervalSince1970
@@ -40,17 +40,17 @@ class Trilateration : PositioningAlgorithm {
         }
         let (distances, points) = self.preprocess(txs: txs)
         /// User its position information and approximate for calculate the position
-        let (point, _) = LeastSquares.fit(distances: distances, points: points)
-        let pos: Position = Position(x: point.x, y: point.y, z: 0)
-//        if accuracy > 5 {
-//            return nil
-//        }
-        /// ignore for Zero prediction
-        if pos.x == 0.0 && pos.y == 0.0 && pos.z == 0.0 {
-            return nil
+        let (result, _) = LeastSquares.fit(distances: distances, points: points)
+        if let result = result {
+            let pos = Position(x: result[0,0], y: result[0,1], z: 0)
+            /// ignore for Zero prediction
+            if pos.x == 0.0 && pos.y == 0.0 && pos.z == 0.0 {
+                return nil
+            }
+            self.diagnosis(pos: pos)
+            return pos
         }
-        self.diagnosis(pos: pos)
-        return pos
+        return nil
     }
     
     func diagnosis(pos: Position) {

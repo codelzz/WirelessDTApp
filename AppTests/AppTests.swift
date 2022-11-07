@@ -29,14 +29,14 @@ final class AppTests: XCTestCase {
     func testMatTranspose() {
         let matrix = Mat(matrix: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
         let answer = Mat(matrix: [[1.0, 3.0, 5.0],[2.0, 4.0, 6.0]])
-        let result = matrix.T()
+        let result = matrix.T
         XCTAssertEqual(result, answer)
     }
     
     func testMatInverse() {
         let matrix = Mat(matrix: [[2, 0], [0, 2]])
         let answer = Mat(matrix: [[0.5, 0], [0, 0.5]])
-        let result = matrix.inv()
+        let result = matrix.inv
         XCTAssertEqual(result, answer)
     }
     
@@ -59,6 +59,14 @@ final class AppTests: XCTestCase {
                                   [0.0,0.0,0.0,0.0,1.0,0.0],
                                   [0.0,0.0,0.0,0.0,0.0,1.0]])
         let result = Mat.makeIdentityMatrix(dim: dim)
+        XCTAssertEqual(result, answer)
+    }
+    
+    func testVectorMultiplication() {
+        let lhs = Mat(matrix: [[1,2,3]])
+        let rhs = Mat(matrix: [[1,2,3]])
+        let answer = lhs * rhs.T!
+        let result = Mat(matrix: [[14.0]])
         XCTAssertEqual(result, answer)
     }
 //
