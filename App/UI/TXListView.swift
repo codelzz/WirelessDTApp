@@ -13,7 +13,7 @@ struct TXListView: View {
     
     var body: some View {
         VStack {
-            HeaderView(title: "Transmitters", subTitle: "Wireless TXs", titleImage: "antenna.radiowaves.left.and.right.circle")
+            HeaderView(title: "Transmitters", subTitle: "Wireless TXs", titleImage: "dot.radiowaves.left.and.right")
             // List
             List {
                 /// display all tx
@@ -23,12 +23,6 @@ struct TXListView: View {
             }
             Spacer()
         }
-    }
-}
-
-struct TXListView_Previews: PreviewProvider {
-    static var previews: some View {
-        TXListView()
     }
 }
 

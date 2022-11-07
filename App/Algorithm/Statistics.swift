@@ -8,9 +8,9 @@
 import Foundation
 
 class Statistics {
-    static func PDF(data: [Double], step: Double, min: Double, max:Double) -> [[Double]]? {
+    static func PDF(data: [Double], step: Double, min: Double, max:Double) -> [[Double]] {
         guard step > 0 && data.count > 1 && max > min && max - min > step else {
-            return nil
+            return []
         }
         
         let bins = Int(((max - min) / step).rounded(.up))
@@ -45,21 +45,18 @@ class Statistics {
         return pdf.sorted(by: {$0[0] < $1[0]})
     }
     
-    static func CDF(data: [Double], step: Double, min: Double, max:Double) -> [[Double]]? {
-        if let pdf = Statistics.PDF(data: data, step: step, min: min, max: max) {
-            var cdf: [[Double]] = []
-            var sum:Double = 0.0
-            pdf.forEach { v in
-                sum += v[1]
-                /// IMPORTANT: prevent numerical unstable
-                if sum > 1.0 {
-                    sum = 1.0
-                }
-                cdf.append([v[0], sum])
+    static func CDF(data: [Double], step: Double, min: Double, max:Double) -> [[Double]] {
+        let pdf = Statistics.PDF(data: data, step: step, min: min, max: max)
+        var cdf: [[Double]] = []
+        var sum:Double = 0.0
+        pdf.forEach { v in
+            sum += v[1]
+            /// IMPORTANT: prevent numerical unstable
+            if sum > 1.0 {
+                sum = 1.0
             }
-            return cdf
+            cdf.append([v[0], sum])
         }
-        return nil
-
+        return cdf
     }
 }

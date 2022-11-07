@@ -21,7 +21,7 @@ struct AppApp: App {
                 NavigationView {
                     TXListView()
                 }.tabItem {
-                    Image(systemName: "antenna.radiowaves.left.and.right.circle")
+                    Image(systemName: "dot.radiowaves.left.and.right")
                     Text("TX")
                 }.tag(0)
                 NavigationView {

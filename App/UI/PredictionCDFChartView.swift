@@ -9,26 +9,36 @@ import SwiftUI
 import Charts
 
 struct PredictionCDFChartView: View {
-    
-    let data: [[Double]]?
+    let data: [[Double]]
 
     var body: some View {
         Text("Cumulative Distribution of Position Error")
             .fontWeight(.semibold)
             .font(.caption)
-        if let data = data {
-            Chart (data, id: \.first) { point in
-                BarMark( x: .value("x", point[0]),
-                         y: .value("y", point[1]),
-                         width: 2
-                )
-                .foregroundStyle(Color(.systemGreen))
+        Chart (data, id: \.first) { point in
+            BarMark( x: .value("x", point[0]),
+                     y: .value("y", point[1]),
+                     width: 2
+            )
+            .foregroundStyle(Color(.systemGreen).opacity(0.8))
+        }
+        .chartXAxis{
+            AxisMarks(values: .stride(by: 1.0)) { value in
+                if value.as(Int.self)! % 5 == 0 {
+                    AxisGridLine().foregroundStyle(.black)
+                    AxisTick().foregroundStyle(.black)
+                } else {
+                    AxisGridLine()
+                }
+                AxisValueLabel()
             }
         }
-        else {
-            Chart () {
-            }.chartXScale(domain: ClosedRange(uncheckedBounds: (lower: 0, upper: 10)))
-                .chartYScale(domain: ClosedRange(uncheckedBounds: (lower: 0, upper: 1)))
-        }
+        .chartYAxis{
+            AxisMarks() { value in
+                AxisGridLine().foregroundStyle(.gray)
+                AxisTick().foregroundStyle(.gray)
+                AxisValueLabel()
+            }
+        }.chartXScale(domain: 0 ... 10)
     }
 }
