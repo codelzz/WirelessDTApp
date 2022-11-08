@@ -34,7 +34,7 @@ struct PredictionCDFChartView: View {
             }
         }
         .chartYAxis{
-            AxisMarks() { value in
+            AxisMarks(values: .stride(by: 0.25)) { value in
                 AxisGridLine().foregroundStyle(.gray)
                 AxisTick().foregroundStyle(.gray)
                 AxisValueLabel()

@@ -20,7 +20,7 @@ class Predictor : ObservableObject {
     var refPos: Position?               /// refPos the realPos collected when prediction is done, it is use for evaluate square error
     @Published var realPos: Position?   /// realPos store the latest ground truth data
     static let maxNumRealPos: Int = 50
-    static let maxNumPredPos: Int = 50
+    static let maxNumPredPos: Int = 25
     var realPoses: [Position] = []
     var predPoses: [Position] = []
     var txPoses: [Position] { TXManager.shared().txs.map { $0.value.pos }}
