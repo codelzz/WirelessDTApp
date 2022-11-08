@@ -13,7 +13,7 @@ struct PredictionView: View {
     var body: some View {
         VStack{
             /// Header
-            HeaderView(title: "Prediction", subTitle: "Position Estimation", titleImage: "target")
+            HeaderView(title: Constant.Prediction, subTitle: "Position Estimation", titleImage: Constant.PredictionIcon)
             PredictionResultChartView()
             /// Probability Distribution
             PredictionPDFChartView(data: Statistics.PDF(data: predictor.squareErrors, step: 0.1, min: 0.0, max: 10.0))

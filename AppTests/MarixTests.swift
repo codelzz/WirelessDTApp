@@ -8,7 +8,7 @@
 import XCTest
 import Surge
 
-final class AppTests: XCTestCase {
+final class MatrixTests: XCTestCase {
     
     func testMatAddiction() {
         let rhs = Mat(matrix: [[1.0, 2.0], [3.0, 4.0], [5.0, 6.0]])
@@ -69,12 +69,4 @@ final class AppTests: XCTestCase {
         let result = Mat(matrix: [[14.0]])
         XCTAssertEqual(result, answer)
     }
-//
-//    func testPerformanceExample() throws {
-//        // This is an example of a performance test case.
-//        measure {
-//            // Put the code you want to measure the time of here.
-//        }
-//    }
-
 }

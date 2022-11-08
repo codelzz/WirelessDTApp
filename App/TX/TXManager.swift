@@ -16,48 +16,45 @@ class TXManager : ObservableObject {
     /// ----------------------------------------------
     /// singleton style
     private static var _shared: TXManager = {
-        return TXManager(infoFileName: "tx_info")
+        return TXManager()
     }()
     class func shared() -> TXManager {
         return self._shared
     }
     /// ----------------------------------------------
     private(set) var txs : [String: TX] = [:]
+    public var prevMeasuredTime:Double = Date().timeIntervalSince1970
     
     /// private initializer for singleton, only class itself can create the instance
-    private init(infoFileName: String) {
-        /// Initialize Transmitters Dictionary
-        let infos = TXManager.loadTXInfos(forResource: infoFileName)
-        infos.forEach { info in
-            /// IMPORTANT: we assume all tx have different name which will be used as the key for TX dictionary
-            let tx = TX(info: TXInfo(id: info.id, name: info.name, x: info.x / 100.0, y: info.y / 100.0, z: info.z / 100))
-            txs[tx.info.name] = tx
-        }
+    private init() {
         /// notification handler
-        NotificationCenter.default.addObserver(self, selector: #selector(self.updateTXHander(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didRecvDataHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
     }
     
-    private static func loadTXInfos(forResource: String) -> [TXInfo] {
-        /// load TX informations from json
-        let url = Bundle.main.url(forResource: forResource, withExtension: "json")!
-        let data = try! Data(contentsOf: url)
-        let infos = try! JSONDecoder().decode([TXInfo].self, from: data)
-        return infos
-    }
-    
-    @objc private func updateTXHander(notification: Notification) {
+    @objc private func didRecvDataHandler(notification: Notification) {
         if let userInfo = notification.userInfo {
             if let txname = userInfo["txname"] as? String,
+                let x = userInfo["txx"] as? Double,
+                let y = userInfo["txy"] as? Double,
+                let z = userInfo["txz"] as? Double,
                 let rssi = userInfo["rssi"] as? Int,
                 let timestamp = userInfo["timestamp"] as? Double {
-                self.updateTX(txname: txname, rssi: rssi, timestamp: timestamp)
+                let pos = Position(x: x, y: y, z: z, t: timestamp)
+                self.updateTX(txname: txname, rssi: rssi, timestamp: timestamp, position: pos)
+                self.prevMeasuredTime = timestamp
             }
         }
     }
     
-    func updateTX(txname: String, rssi: Int, timestamp: Double)
-    {
-        self.txs[txname]?.update(rssi: rssi, timestamp: timestamp)
+    func updateTX(txname: String, rssi: Int, timestamp: Double, position: Position? = nil) {
+        if let _ = self.txs[txname] {
+            self.txs[txname]?.update(rssi: rssi, timestamp: timestamp, position: position)
+        } else {
+            if let pos = position {
+                self.txs[txname] = TX(name: txname, position: pos)
+                self.txs[txname]?.update(rssi: rssi, timestamp: timestamp)
+            }
+        }
     }
     
     func getDetectableTXs() -> [TX] {

@@ -11,9 +11,9 @@ import Surge
 class Predictor : ObservableObject {
     let algorithm: PositioningAlgorithm
     var kalmanFilter: KalmanFilter?
-    var enableKalmanFilter: Bool = true
+    var enableKalmanFilter: Bool = false
     /// prediction control
-    private var predInterval:Double = 0.01
+    private var predInterval:Double = 0.025
     private var prevPredTime:Double = Date().timeIntervalSince1970
     /// data
     @Published var pos: Position?       /// pos save the prediction result
@@ -23,11 +23,13 @@ class Predictor : ObservableObject {
     static let maxNumPredPos: Int = 50
     var realPoses: [Position] = []
     var predPoses: [Position] = []
+    var txPoses: [Position] { TXManager.shared().txs.map { $0.value.pos }}
     static let minRealPosUpdateInterval: Double = 0.15
     /// analysis
     var squareError: Double?
     var squareErrors: [Double] = []
     static let maxNumSquareErr: Int = 1000
+    var prevMeasuredTime: Double = Date().timeIntervalSince1970
     
     init(algorithm: PositioningAlgorithm) {
         self.algorithm = algorithm
@@ -58,9 +60,9 @@ class Predictor : ObservableObject {
     @objc func didRecvDataHandler(notification: Notification) {
         /// handle ground truth update
         if let userInfo = notification.userInfo {
-            if let x = userInfo["x"] as? Double,
-                let y = userInfo["y"] as? Double,
-                let z = userInfo["z"] as? Double,
+            if let x = userInfo["rxx"] as? Double,
+                let y = userInfo["rxy"] as? Double,
+                let z = userInfo["rxz"] as? Double,
                 let t = userInfo["timestamp"] as? Double {
                 let pos = Position(x: x, y: y, z: z, t: t)
                 /// check if update is required
@@ -87,8 +89,12 @@ class Predictor : ObservableObject {
             guard now - self.prevPredTime > self.predInterval else {
                 return
             }
+            guard TXManager.shared().prevMeasuredTime - self.prevMeasuredTime > self.predInterval else {
+                return
+            }
             self.predict(txs: TXManager.shared().getDetectableTXs())
             self.prevPredTime = now
+            self.prevMeasuredTime = TXManager.shared().prevMeasuredTime
         }
     }
 

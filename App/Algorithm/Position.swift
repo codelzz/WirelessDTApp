@@ -8,11 +8,20 @@
 import Foundation
 
 struct Position : Identifiable, Equatable {
+    //MARK: - Position Properties
     let id = UUID()
-    let x:Double
-    let y:Double
-    let z:Double
-    let t:Double
+    var x:Double
+    var y:Double
+    var z:Double
+    var t:Double
+    var xy: [Double] { [self.x, self.y] }
+    var yx: [Double] { [self.y, self.x] }
+    var xz: [Double] { [self.x, self.z] }
+    var zx: [Double] { [self.z, self.x] }
+    var yz: [Double] { [self.y, self.z] }
+    var zy: [Double] { [self.z, self.y] }
+    var xyz: [Double] { [self.x, self.y, self.z]}
+
     
     init(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0, t: Double = Date().timeIntervalSince1970) {
         self.x = x

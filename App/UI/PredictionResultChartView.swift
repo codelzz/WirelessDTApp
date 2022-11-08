@@ -30,30 +30,38 @@ struct PredictionResultChartView: View {
             }.foregroundStyle(by: .value("key", Constant.Prediction))
                 .symbol(by: .value("key", Constant.Prediction))
                 .symbolSize(20)
-        }.chartForegroundStyleScale([Constant.GroundTruth: Color(.systemGreen).opacity(0.8), Constant.Prediction: Color(.systemRed).opacity(0.8)])
-            .chartSymbolScale([Constant.GroundTruth: .circle, Constant.Prediction: .cross])
-            .chartXScale(domain: -6 ... 6)
-            .chartYScale(domain: -6 ... 6)
+            /// TX
+            ForEach(predictor.txPoses) { pos in
+                PointMark(x: .value("x", pos.y), y: .value("y", pos.x))
+            }.foregroundStyle(by: .value("key", Constant.Transmitters))
+                .symbol(by: .value("key", Constant.Transmitters))
+                .symbolSize(20)
+        }.chartForegroundStyleScale([Constant.GroundTruth: Color(.systemGreen).opacity(0.8),
+                                     Constant.Prediction: Color(.systemRed).opacity(0.8),
+                                     Constant.Transmitters: Color(.systemBlue).opacity(0.8)])
+            .chartSymbolScale([Constant.GroundTruth: .circle, Constant.Prediction: .cross, Constant.Transmitters: .asterisk])
+            .chartXScale(domain: -15 ... 15)
+            .chartYScale(domain: -15 ... 15)
             .chartLegend(position: .top, alignment: .topTrailing, spacing: 10)
             .chartXAxis{
                 AxisMarks(values: .stride(by: 1)) { value in
                     if value.as(Int.self)! % 5 == 0 {
                         AxisGridLine().foregroundStyle(.black)
                         AxisTick().foregroundStyle(.black)
+                        AxisValueLabel()
                     } else {
                         AxisGridLine()
                     }
-                    AxisValueLabel()
                 }
             }.chartYAxis{
                 AxisMarks(values: .stride(by: 1)) { value in
                     if value.as(Int.self)! % 5 == 0 {
                         AxisGridLine().foregroundStyle(.black)
                         AxisTick().foregroundStyle(.black)
+                        AxisValueLabel()
                     } else {
                         AxisGridLine()
                     }
-                    AxisValueLabel()
                 }
             }
             .frame(width: 410, height: 410)

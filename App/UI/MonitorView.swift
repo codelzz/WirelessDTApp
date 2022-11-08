@@ -28,9 +28,3 @@ struct MonitorView: View {
         }
     }
 }
-
-struct MonitorView_Previews: PreviewProvider {
-    static var previews: some View {
-        MonitorView()
-    }
-}

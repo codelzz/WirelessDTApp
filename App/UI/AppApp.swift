@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct AppApp: App {
     /// initialize the singleton
+    let conf = Config.shared()
     let sync = WiTracingSync.shared()
     /// environment object
     @StateObject var predictor = Predictor(algorithm: SmoothSwapTrilateration())
@@ -21,20 +22,20 @@ struct AppApp: App {
                 NavigationView {
                     TXListView()
                 }.tabItem {
-                    Image(systemName: "dot.radiowaves.left.and.right")
-                    Text("TX")
+                    Image(systemName: Constant.TXIcon)
+                    Text(Constant.TX)
                 }.tag(0)
                 NavigationView {
                     PredictionView()
                 }.tabItem {
-                    Image(systemName: "target")
-                    Text("Prediction")
+                    Image(systemName: Constant.PredictionIcon)
+                    Text(Constant.Prediction)
                 }.tag(1)
                 NavigationView {
                     SettingsView()
                 }.tabItem {
-                    Image(systemName: "gearshape.fill")
-                    Text("Settings")
+                    Image(systemName: Constant.SettingsIcon)
+                    Text(Constant.Settings)
                 }.tag(2)
             }.environmentObject(predictor)
         }

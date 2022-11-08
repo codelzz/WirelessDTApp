@@ -13,11 +13,11 @@ struct TXListView: View {
     
     var body: some View {
         VStack {
-            HeaderView(title: "Transmitters", subTitle: "Wireless TXs", titleImage: "dot.radiowaves.left.and.right")
+            HeaderView(title: Constant.Transmitters, subTitle: "Wireless TXs", titleImage: Constant.TXIcon)
             // List
             List {
                 /// display all tx
-                ForEach(self.txManager.txs.sorted (by: >), id: \.value.info.id) { key, tx in
+                ForEach(self.txManager.txs.sorted (by: >), id: \.value.id) { key, tx in
                     TXListItemView(tx: tx)
                 }
             }

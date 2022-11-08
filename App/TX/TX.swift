@@ -7,17 +7,6 @@
 
 import Foundation
 
-struct TXInfo: Decodable, Identifiable {
-    let id: Int
-    let name: String
-    let x: Double
-    let y: Double
-    let z: Double
-    
-    // static keywork make it exist only once and share between all struct
-    static let example = TXInfo(id: 0, name: "TX0", x: 100.0, y: 0.0, z: -100.0)
-}
-
 struct RSSIMeasurement: Identifiable {
     var id: Double {timestamp}
     let rssi: Int
@@ -33,27 +22,30 @@ struct RSSIMeasurement: Identifiable {
 
 class TX : ObservableObject, Identifiable, Comparable {
     //MARK: - TX Properties
-    var id: String { info.name }
-    let info: TXInfo
+    var id: String { name }
+    let name: String
+    var pos:Position
     @Published var rssi: Int?
     var timestamp: Double?
     var rssis: [RSSIMeasurement] = []
     var distance: Double { Signal.rssiToDistance(rssi: rssi!) }
     static let minRssi: Int = -255
     static let maxNumMeasurement: Int = 50
-
-    /// Coodinates
-    var xy: [Double] { [self.info.x, self.info.y] }
     
-    init(info: TXInfo) {
-        self.info = info
+    //MARK: - TX Constructor
+    init(name: String, position: Position) {
+        self.name = name
+        self.pos = position
     }
     
     //MARK: - TX Methods
     
-    func update(rssi: Int, timestamp: Double)
+    func update(rssi: Int, timestamp: Double, position: Position? = nil)
     {
         DispatchQueue.main.async {
+            if let pos = position {
+                self.pos = pos
+            }
             self.rssi = rssi > TX.minRssi ? rssi : nil
             self.timestamp = timestamp
             /// append the measurement to the history stack
@@ -67,14 +59,6 @@ class TX : ObservableObject, Identifiable, Comparable {
     
     func isDetectable() -> Bool {
         return self.rssi != nil && self.rssi! > TX.minRssi
-    }
-    
-    public func copy() -> TX {
-        let copy = TX(info: self.info)
-        copy.rssis = self.rssis.map{ $0.copy() }
-        copy.rssi = self.rssi
-        copy.timestamp = self.timestamp
-        return copy
     }
 
     //MARK: - TX Operator Method

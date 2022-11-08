@@ -10,7 +10,7 @@ import Foundation
 class Trilateration : PositioningAlgorithm {
     
     //MARK: - Trilateration properties
-    static let maxSpeed: Double = 10.0 /// 5 m/s
+    static let maxSpeed: Double = 5 /// 5 m/s
     static let minNumMeasurement: Int = 4
 
     var prevPos: Position?
@@ -20,26 +20,24 @@ class Trilateration : PositioningAlgorithm {
     
     //MARK: - Trilateration Methods
     
-    internal func preprocess(txs: [TX]) -> ([Double], [[Double]]) {
+    internal func preprocess(txs: [TX]) -> ([Position], [Double]) {
         /// Keep the top three result
         let sortedTXs = txs.sorted { (lhs, rhs) in
-            return lhs > rhs
+            return lhs.rssi! > rhs.rssi!
         }
-        /// Find the cloest 3 transmitter
-        let top3TXs = sortedTXs[0...2]
+        var points: [Position] = []
         var distances : [Double] = []
-        var points: [[Double]] = []
-        top3TXs.forEach { tx in
+        sortedTXs.forEach { tx in
             distances.append(tx.distance)
-            points.append(tx.xy)
+            points.append(tx.pos)
         }
-        return (distances, points)
+        return (Array(points[0...3]), Array(distances[0...3]))
     }
 
     func predict(txs: [TX]) -> Position?
     {
         /// Ensure detectable transmitters meet the minimun number
-        guard txs.count >= 3 else {
+        guard txs.count >= 4 else {
             return nil
         }
         /// Ensure system warmup properly
@@ -47,13 +45,8 @@ class Trilateration : PositioningAlgorithm {
             return nil
         }
         
-        let (distances, points) = self.preprocess(txs: txs)
-        /// User its position information and approximate for calculate the position
-        let (result, _) = LeastSquares.fit(distances: distances, points: points)
-        if let m = result {
-            /// IMPORTANT: using default now as time **t** might cause divide by a very small value
-            /// this will cause the velocity calculation in kalman filter has very large error
-            let pos = Position(x: m[0,0], y: m[0,1], z: 0, t:self.getMeasuredTime(txs: txs))
+        let (points, distances) = self.preprocess(txs: txs)
+        if let pos = LeastSquares.fit(points: Array(points), distances: Array(distances)) {
             self.diagnosis(pos: pos)
             return pos
         }
@@ -85,21 +78,21 @@ class Trilateration : PositioningAlgorithm {
 class SmoothSwapTrilateration : Trilateration {
     
     //MARK: - SmoothSwapTrilateration properties
-    var prevTop3TXs: [TX] = []
-    private let minSwapRank: Int = 5
+    var prevTop4TXs: [TX] = []
+    private let minSwapRank: Int = 8
     
     //MARK: - Trilateration Methods
-    override internal func preprocess(txs: [TX]) -> ([Double], [[Double]]) {
-    let top3TXs = self.smoothSwap(txs: txs)
-        var distances : [Double] = []
-        var points: [[Double]] = []
-        top3TXs.forEach { tx in
-            distances.append(tx.distance)
-            points.append(tx.xy)
-        }
+    override internal func preprocess(txs: [TX]) -> ([Position], [Double]) {
         
-        self.prevTop3TXs = Array(top3TXs)
-        return (distances, points)
+        let tops = self.smoothSwap(txs: txs)
+        var points: [Position] = []
+        var distances : [Double] = []
+        tops.forEach { tx in
+            points.append(tx.pos)
+            distances.append(tx.distance)
+        }
+        self.prevTop4TXs = Array(tops[0...3])
+        return (points, distances)
     }
     
     private func smoothSwap (txs: [TX]) -> [TX] {
@@ -107,32 +100,33 @@ class SmoothSwapTrilateration : Trilateration {
         let sortedTXs = txs.sorted { (lhs, rhs) in
             return lhs > rhs
         }
+        
         /// ensure there is sufficient valid transmitter  for swapping
         guard txs.count > self.minSwapRank else {
-            return Array(sortedTXs[0...2])
+            return Array(sortedTXs[0 ... 3])
         }
         /// get the tops within rank as dictionary
         let topTXs = Dictionary(uniqueKeysWithValues: Array(sortedTXs[0...self.minSwapRank]).map{($0.id, $0)})
-        var newTop3TXs:[String:TX] = [:]
+        var newTop4TXs:[String:TX] = [:]
         
-        self.prevTop3TXs.forEach { tx in
+        self.prevTop4TXs.forEach { tx in
             if topTXs.contains(where: { $0.key == tx.id }) {
-                newTop3TXs[tx.id] = tx
+                newTop4TXs[tx.id] = tx
             }
         }
         
-        if newTop3TXs.count == 3 {
-            return Array(newTop3TXs.values)
+        if newTop4TXs.count == 4 {
+            return Array(newTop4TXs.values)
         }
         
         for tx in sortedTXs {
-            if !(newTop3TXs.contains(where: { $0.key == tx.id })) {
-                newTop3TXs[tx.id] = tx
-                if newTop3TXs.count >= 3 {
+            if !(newTop4TXs.contains(where: { $0.key == tx.id })) {
+                newTop4TXs[tx.id] = tx
+                if newTop4TXs.count >= 4 {
                     break
                 }
             }
         }
-        return Array(newTop3TXs.values)
+        return Array(newTop4TXs.values)
     }
 }
