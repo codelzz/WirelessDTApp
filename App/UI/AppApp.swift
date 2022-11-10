@@ -11,9 +11,12 @@ import SwiftUI
 struct AppApp: App {
     /// initialize the singleton
     let conf = Config.shared()
+    let txmanager = TXManager.shared()
     let sync = WiTracingSync.shared()
+    let model = DeepPos()
     /// environment object
     @StateObject var predictor = Predictor(algorithm: SmoothSwapTrilateration())
+    @StateObject var dlPredictor = DeepProcessor.shared()
     @State private var selection = 1
 
     var body: some Scene {
@@ -32,12 +35,13 @@ struct AppApp: App {
                     Text(Constant.Prediction)
                 }.tag(1)
                 NavigationView {
-                    SettingsView()
+                    DeepLearningView()
                 }.tabItem {
-                    Image(systemName: Constant.SettingsIcon)
-                    Text(Constant.Settings)
+                    Image(systemName: Constant.DeepLearningIcon)
+                    Text(Constant.DeepLearning)
                 }.tag(2)
             }.environmentObject(predictor)
+                .environmentObject(dlPredictor)
         }
     }
 }

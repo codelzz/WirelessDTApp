@@ -40,5 +40,6 @@ struct PredictionCDFChartView: View {
                 AxisValueLabel()
             }
         }.chartXScale(domain: 0 ... 10)
+        .frame(width: 410)
     }
 }

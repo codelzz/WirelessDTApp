@@ -41,5 +41,6 @@ struct PredictionPDFChartView: View {
             }
         }
         .chartXScale(domain: 0 ... 10)
+        .frame(width: 410)
     }
 }

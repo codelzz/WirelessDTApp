@@ -11,18 +11,19 @@ import Surge
 class Predictor : ObservableObject {
     let algorithm: PositioningAlgorithm
     var kalmanFilter: KalmanFilter?
-    var enableKalmanFilter: Bool = false
+    var enableKalmanFilter: Bool = true
     /// prediction control
     private var predInterval:Double = 0.025
     private var prevPredTime:Double = Date().timeIntervalSince1970
     /// data
     @Published var pos: Position?       /// pos save the prediction result
-    var refPos: Position?               /// refPos the realPos collected when prediction is done, it is use for evaluate square error
     @Published var realPos: Position?   /// realPos store the latest ground truth data
+    var refPos: Position?               /// refPos the realPos collected when prediction is done, it is use for evaluate square error
     static let maxNumRealPos: Int = 50
     static let maxNumPredPos: Int = 25
     var realPoses: [Position] = []
     var predPoses: [Position] = []
+    //MARK: this may fail if txs haven't been load?
     var txPoses: [Position] { TXManager.shared().txs.map { $0.value.pos }}
     static let minRealPosUpdateInterval: Double = 0.15
     /// analysis
@@ -128,7 +129,6 @@ class Predictor : ObservableObject {
                 return
             }
         }
-        
         self.realPos = pos
         self.realPoses.append(pos)
         if self.realPoses.count > Predictor.maxNumRealPos {
