@@ -14,7 +14,6 @@
 		178774DD29150885008CC1C8 /* Trilateration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774DC29150885008CC1C8 /* Trilateration.swift */; };
 		178774DF291511F9008CC1C8 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774DE291511F9008CC1C8 /* Position.swift */; };
 		178774E529152B35008CC1C8 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774E429152B35008CC1C8 /* Signal.swift */; };
-		178774E929155CDE008CC1C8 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774E829155CDE008CC1C8 /* Predictor.swift */; };
 		178774ED291636C7008CC1C8 /* PredictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774EC291636C7008CC1C8 /* PredictionView.swift */; };
 		178774EF29163876008CC1C8 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774EE29163876008CC1C8 /* HeaderView.swift */; };
 		178774F429163E0C008CC1C8 /* WiTracingSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774F329163E0C008CC1C8 /* WiTracingSync.swift */; };
@@ -35,20 +34,21 @@
 		17D7FCB52919F6D3002A9153 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774DE291511F9008CC1C8 /* Position.swift */; };
 		17D7FCB62919F6E9002A9153 /* TX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34862913AAA800FAD24B /* TX.swift */; };
 		17D7FCB72919F709002A9153 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774E429152B35008CC1C8 /* Signal.swift */; };
-		17D7FCB9291A5112002A9153 /* DeepAR.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCB8291A5112002A9153 /* DeepAR.swift */; };
 		17D7FCBB291A518F002A9153 /* DeepLearningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCBA291A518F002A9153 /* DeepLearningView.swift */; };
-		17D7FCDD291B7C34002A9153 /* DeepPos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCDC291B7C34002A9153 /* DeepPos.swift */; };
 		17D7FCE1291B7DC0002A9153 /* rnnpos.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCE0291B7DBF002A9153 /* rnnpos.mlmodel */; };
 		17D7FCE3291B8403002A9153 /* Tensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCE2291B8403002A9153 /* Tensor.swift */; };
-		17D7FCE6291BB1EB002A9153 /* DeepProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCE5291BB1EB002A9153 /* DeepProcessor.swift */; };
 		17D7FCEA291BD694002A9153 /* meanstd.json in Resources */ = {isa = PBXBuildFile; fileRef = 17D7FCE9291BD694002A9153 /* meanstd.json */; };
+		17D7FCEC291CEB55002A9153 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCEB291CEB55002A9153 /* DataManager.swift */; };
+		17D7FCEE291D27FA002A9153 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCED291D27FA002A9153 /* Predictor.swift */; };
+		17D7FCF1291D30F1002A9153 /* TrilaterationPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCF0291D30F1002A9153 /* TrilaterationPredictor.swift */; };
+		17D7FCF3291D4DA2002A9153 /* RNNPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCF2291D4DA2002A9153 /* RNNPredictor.swift */; };
+		17D7FCF5291DE92E002A9153 /* TickableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCF4291DE92E002A9153 /* TickableObject.swift */; };
 		17ED34872913AAA800FAD24B /* TX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34862913AAA800FAD24B /* TX.swift */; };
 		17ED348D2913BEA100FAD24B /* configuration.json in Resources */ = {isa = PBXBuildFile; fileRef = 17ED348C2913BEA000FAD24B /* configuration.json */; };
 		17ED348F2913F1EF00FAD24B /* TXListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED348E2913F1EF00FAD24B /* TXListView.swift */; };
 		17ED34932913F48900FAD24B /* MonitorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34922913F48900FAD24B /* MonitorView.swift */; };
 		17ED34952913F58500FAD24B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34942913F58500FAD24B /* SettingsView.swift */; };
 		17ED349A291479D000FAD24B /* UDPAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED3499291479D000FAD24B /* UDPAgent.swift */; };
-		17ED349F2914B64100FAD24B /* TXManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED349E2914B64100FAD24B /* TXManager.swift */; };
 		17ED34A12914B7C700FAD24B /* WiTracingEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34A02914B7C700FAD24B /* WiTracingEntity.swift */; };
 		942F48DA9F3CC9B56201583E /* Pods_App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5E9352B87D21F83F27BB83 /* Pods_App.framework */; };
 		FD7C6206B27ED2CC49FA7000 /* Pods_AppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E16A991C3F88284AD6CA2B47 /* Pods_AppTests.framework */; };
@@ -73,7 +73,6 @@
 		178774DC29150885008CC1C8 /* Trilateration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trilateration.swift; sourceTree = "<group>"; };
 		178774DE291511F9008CC1C8 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		178774E429152B35008CC1C8 /* Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Signal.swift; sourceTree = "<group>"; };
-		178774E829155CDE008CC1C8 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 		178774EC291636C7008CC1C8 /* PredictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictionView.swift; sourceTree = "<group>"; };
 		178774EE29163876008CC1C8 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		178774F329163E0C008CC1C8 /* WiTracingSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiTracingSync.swift; sourceTree = "<group>"; };
@@ -90,20 +89,21 @@
 		17D7FCAE29194F27002A9153 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		17D7FCB02919DE50002A9153 /* LeastSquares.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeastSquares.swift; sourceTree = "<group>"; };
 		17D7FCB32919F65C002A9153 /* LeastSquaresTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeastSquaresTest.swift; sourceTree = "<group>"; };
-		17D7FCB8291A5112002A9153 /* DeepAR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepAR.swift; sourceTree = "<group>"; };
 		17D7FCBA291A518F002A9153 /* DeepLearningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLearningView.swift; sourceTree = "<group>"; };
-		17D7FCDC291B7C34002A9153 /* DeepPos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepPos.swift; sourceTree = "<group>"; };
 		17D7FCE0291B7DBF002A9153 /* rnnpos.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = rnnpos.mlmodel; sourceTree = "<group>"; };
 		17D7FCE2291B8403002A9153 /* Tensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tensor.swift; sourceTree = "<group>"; };
-		17D7FCE5291BB1EB002A9153 /* DeepProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepProcessor.swift; sourceTree = "<group>"; };
 		17D7FCE9291BD694002A9153 /* meanstd.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = meanstd.json; sourceTree = "<group>"; };
+		17D7FCEB291CEB55002A9153 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		17D7FCED291D27FA002A9153 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
+		17D7FCF0291D30F1002A9153 /* TrilaterationPredictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrilaterationPredictor.swift; sourceTree = "<group>"; };
+		17D7FCF2291D4DA2002A9153 /* RNNPredictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNNPredictor.swift; sourceTree = "<group>"; };
+		17D7FCF4291DE92E002A9153 /* TickableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickableObject.swift; sourceTree = "<group>"; };
 		17ED34862913AAA800FAD24B /* TX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TX.swift; sourceTree = "<group>"; };
 		17ED348C2913BEA000FAD24B /* configuration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = configuration.json; sourceTree = "<group>"; };
 		17ED348E2913F1EF00FAD24B /* TXListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TXListView.swift; sourceTree = "<group>"; };
 		17ED34922913F48900FAD24B /* MonitorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorView.swift; sourceTree = "<group>"; };
 		17ED34942913F58500FAD24B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		17ED3499291479D000FAD24B /* UDPAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPAgent.swift; sourceTree = "<group>"; };
-		17ED349E2914B64100FAD24B /* TXManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TXManager.swift; sourceTree = "<group>"; };
 		17ED34A02914B7C700FAD24B /* WiTracingEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiTracingEntity.swift; sourceTree = "<group>"; };
 		4BB3D9948338ABB2E5124C37 /* Pods-AppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTests.release.xcconfig"; path = "Target Support Files/Pods-AppTests/Pods-AppTests.release.xcconfig"; sourceTree = "<group>"; };
 		653EC647E898BCC300C127AE /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
@@ -158,7 +158,6 @@
 			children = (
 				17D7FCA62918FDD6002A9153 /* Extension */,
 				17D7FCD9291B79B8002A9153 /* Common */,
-				17D7FCD6291B7946002A9153 /* DeepLearning */,
 				178774DB2915084F008CC1C8 /* Algorithm */,
 				17ED349D2914B62A00FAD24B /* TX */,
 				17ED34912913F40100FAD24B /* UI */,
@@ -179,14 +178,16 @@
 		178774DB2915084F008CC1C8 /* Algorithm */ = {
 			isa = PBXGroup;
 			children = (
+				17D7FCEF291D30D0002A9153 /* Predictors */,
+				17D7FCD6291B7946002A9153 /* DeepLearning */,
 				178774DE291511F9008CC1C8 /* Position.swift */,
 				17D7FCB02919DE50002A9153 /* LeastSquares.swift */,
 				178774DC29150885008CC1C8 /* Trilateration.swift */,
 				178774E429152B35008CC1C8 /* Signal.swift */,
-				178774E829155CDE008CC1C8 /* Predictor.swift */,
 				17D7FC8A2916C5DF002A9153 /* Statistics.swift */,
 				17D7FC92291743AE002A9153 /* KalmanFilter.swift */,
 				17D7FC94291743C5002A9153 /* Matrix.swift */,
+				17D7FCEB291CEB55002A9153 /* DataManager.swift */,
 			);
 			path = Algorithm;
 			sourceTree = "<group>";
@@ -220,9 +221,6 @@
 			isa = PBXGroup;
 			children = (
 				17D7FCE2291B8403002A9153 /* Tensor.swift */,
-				17D7FCB8291A5112002A9153 /* DeepAR.swift */,
-				17D7FCDC291B7C34002A9153 /* DeepPos.swift */,
-				17D7FCE5291BB1EB002A9153 /* DeepProcessor.swift */,
 				17D7FCE9291BD694002A9153 /* meanstd.json */,
 				17D7FCE0291B7DBF002A9153 /* rnnpos.mlmodel */,
 			);
@@ -232,12 +230,23 @@
 		17D7FCD9291B79B8002A9153 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				17D7FCF4291DE92E002A9153 /* TickableObject.swift */,
 				178774F5291670A7008CC1C8 /* Constant.swift */,
 				17D7FCAE29194F27002A9153 /* Configuration.swift */,
 				17ED348C2913BEA000FAD24B /* configuration.json */,
 				1700C2F929138A0E004824E9 /* Assets.xcassets */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		17D7FCEF291D30D0002A9153 /* Predictors */ = {
+			isa = PBXGroup;
+			children = (
+				17D7FCED291D27FA002A9153 /* Predictor.swift */,
+				17D7FCF0291D30F1002A9153 /* TrilaterationPredictor.swift */,
+				17D7FCF2291D4DA2002A9153 /* RNNPredictor.swift */,
+			);
+			path = Predictors;
 			sourceTree = "<group>";
 		};
 		17ED34912913F40100FAD24B /* UI */ = {
@@ -272,7 +281,6 @@
 			isa = PBXGroup;
 			children = (
 				17ED34862913AAA800FAD24B /* TX.swift */,
-				17ED349E2914B64100FAD24B /* TXManager.swift */,
 			);
 			path = TX;
 			sourceTree = "<group>";
@@ -490,31 +498,31 @@
 				17ED34952913F58500FAD24B /* SettingsView.swift in Sources */,
 				17ED34932913F48900FAD24B /* MonitorView.swift in Sources */,
 				17D7FCA82918FDEA002A9153 /* DoubleExtension.swift in Sources */,
-				178774E929155CDE008CC1C8 /* Predictor.swift in Sources */,
 				17ED349A291479D000FAD24B /* UDPAgent.swift in Sources */,
 				178774EF29163876008CC1C8 /* HeaderView.swift in Sources */,
+				17D7FCF5291DE92E002A9153 /* TickableObject.swift in Sources */,
 				17ED34A12914B7C700FAD24B /* WiTracingEntity.swift in Sources */,
 				17D7FCE1291B7DC0002A9153 /* rnnpos.mlmodel in Sources */,
 				178774E529152B35008CC1C8 /* Signal.swift in Sources */,
-				17D7FCE6291BB1EB002A9153 /* DeepProcessor.swift in Sources */,
-				17D7FCB9291A5112002A9153 /* DeepAR.swift in Sources */,
 				178774DD29150885008CC1C8 /* Trilateration.swift in Sources */,
 				1700C2F629138A0C004824E9 /* AppApp.swift in Sources */,
 				17D7FCE3291B8403002A9153 /* Tensor.swift in Sources */,
 				17ED34872913AAA800FAD24B /* TX.swift in Sources */,
+				17D7FCF3291D4DA2002A9153 /* RNNPredictor.swift in Sources */,
 				178774F6291670A7008CC1C8 /* Constant.swift in Sources */,
+				17D7FCEC291CEB55002A9153 /* DataManager.swift in Sources */,
 				17D7FC8D2916CBF4002A9153 /* PredictionResultChartView.swift in Sources */,
 				17D7FC95291743C5002A9153 /* Matrix.swift in Sources */,
 				17D7FCBB291A518F002A9153 /* DeepLearningView.swift in Sources */,
 				178774F429163E0C008CC1C8 /* WiTracingSync.swift in Sources */,
 				17D7FC93291743AE002A9153 /* KalmanFilter.swift in Sources */,
-				17D7FCDD291B7C34002A9153 /* DeepPos.swift in Sources */,
 				178774ED291636C7008CC1C8 /* PredictionView.swift in Sources */,
 				17D7FCAF29194F27002A9153 /* Configuration.swift in Sources */,
 				17D7FC8B2916C5DF002A9153 /* Statistics.swift in Sources */,
-				17ED349F2914B64100FAD24B /* TXManager.swift in Sources */,
+				17D7FCF1291D30F1002A9153 /* TrilaterationPredictor.swift in Sources */,
 				17ED348F2913F1EF00FAD24B /* TXListView.swift in Sources */,
 				178774DA291500C6008CC1C8 /* TXListItemView.swift in Sources */,
+				17D7FCEE291D27FA002A9153 /* Predictor.swift in Sources */,
 				17D7FCB12919DE50002A9153 /* LeastSquares.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

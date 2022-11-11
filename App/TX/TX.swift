@@ -20,12 +20,12 @@ struct RSSIMeasurement: Identifiable {
     }
 }
 
-class TX : ObservableObject, Identifiable, Comparable {
+class TX : TickableObject, Identifiable, Comparable {
     //MARK: - TX Properties
     var id: String { name }
     let name: String
     var pos:Position
-    @Published var rssi: Int?
+    var rssi: Int?
     var timestamp: Double?
     var rssis: [RSSIMeasurement] = []
     var distance: Double { Signal.rssiToDistance(rssi: rssi!) }
@@ -40,16 +40,14 @@ class TX : ObservableObject, Identifiable, Comparable {
     
     //MARK: - TX Methods
     
-    func update(rssi: Int, timestamp: Double, position: Position? = nil)
+    func update(rssi: Int, position: Position)
     {
         DispatchQueue.main.async {
-            if let pos = position {
-                self.pos = pos
-            }
+            self.pos = position
             self.rssi = rssi > TX.minRssi ? rssi : nil
-            self.timestamp = timestamp
+            self.timestamp = position.t
             /// append the measurement to the history stack
-            self.rssis.append(RSSIMeasurement(rssi: rssi, timestamp: timestamp))
+            self.rssis.append(RSSIMeasurement(rssi: rssi, timestamp: position.t))
             if self.rssis.count > TX.maxNumMeasurement
             {
                 self.rssis.remove(at: 0)

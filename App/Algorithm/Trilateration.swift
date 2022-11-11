@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Trilateration : PositioningAlgorithm {
+class Trilateration {
     
     //MARK: - Trilateration properties
     static let maxSpeed: Double = 5 /// 5 m/s
@@ -75,7 +75,7 @@ class Trilateration : PositioningAlgorithm {
     }
 }
 
-class SmoothSwapTrilateration : Trilateration {
+class SmoothSwapTrilateration :  Trilateration{
     
     //MARK: - SmoothSwapTrilateration properties
     var prevTop4TXs: [TX] = []

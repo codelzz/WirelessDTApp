@@ -1,8 +1,8 @@
 //
-//  DeepProcessor.swift
+//  RNNPredictor.swift
 //  App
 //
-//  Created by x on 9/11/2022.
+//  Created by x on 10/11/2022.
 //
 
 import Foundation
@@ -14,113 +14,67 @@ struct MeanStd: Decodable {
     let std:Double
 }
 
-class DeepProcessor : ObservableObject {
-    let batch:NSNumber = 1
-    let seq:NSNumber = 50
-    let dim:NSNumber = 25
+class RNNPredictor: Predictor {
+    //MARK: - RNNPredictor Properties
+    var kalman:KalmanFilter?
+    var enableKalman:Bool = false
+    ///
+    private let batch:NSNumber = 1
+    private let seq:NSNumber = 50
+    private let dim:NSNumber = 25
     var inputShape:[NSNumber] {[self.batch, self.seq, self.dim]}
-    var model:rnnpos
-    
-    //MARK: - DeepProcessor Properties
-//    let model = DeepPos()
-    @Published var pos:Position?
-    @Published var realPos:Position?
-    var refPos:Position?
-    static let maxNumRealPos: Int = 50
-    static let maxNumPredPos: Int = 25
-    var realPoses: [Position] = [Position(x:1,y: 0,z: 0,t: 0),Position(x: 2,y: 0,z: 0,t: 0),Position(x: 3,y: 0,z: 0,t: 0),Position(x: 4,y: 0,z: 0,t: 0)]
-    var predPoses: [Position] = []
-    static let minRealPosUpdateInterval: Double = 0.15
-    /// analysis
-    var squareError: Double?
-    var squareErrors: [Double] = []
-    static let maxNumSquareErr: Int = 1000
-    //
-    var txPoses: [Position] { TXManager.shared().txs.map { $0.value.pos }}
-    /// prediction control
-    private var predInterval:Double = 0.025
-    private var prevPredTime:Double = Date().timeIntervalSince1970
-    var prevMeasuredTime: Double = Date().timeIntervalSince1970
-
-    //MARK: - DeepProcessor Singleton
-    private static var _shared: DeepProcessor = {
-        return DeepProcessor()
-    }()
-    class func shared() -> DeepProcessor {
-        return self._shared
-    }
-    
-    //MARK: - DeepProcessor Properties
+    private var model:rnnpos
     private(set) var txs : [String: [Double]] = [:] /// dictionary is not threading save in make sure all access are from same thread (e.g. main)
-    var meanstd: [String:MeanStd] = [:]
-    static let maxWindowSize = 50
-
-    //MARK: - DeepProcessor Constructor
-    private init() {
-        
+    private var meanstd: [String:MeanStd] = [:]
+    private let maxWindowSize = 50
+    
+    override init() {
         guard let model = try? rnnpos() else {
             fatalError("Unable to load model")
         }
         self.model = model
-        
+        super.init()
         self.load()
-        /// notification handler
-        NotificationCenter.default.addObserver(self, selector: #selector(self.didRecvDataHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
     }
     
     //MARK: - DeepProcessor Notification Handler
-    @objc private func didRecvDataHandler(notification: Notification) {
-        if let userInfo = notification.userInfo {
-            if let txname = userInfo["txname"] as? String,
-                let txx = userInfo["txx"] as? Double,
-                let txy = userInfo["txy"] as? Double,
-                let txz = userInfo["txz"] as? Double,
-                let rxx = userInfo["rxx"] as? Double,
-                let rxy = userInfo["rxy"] as? Double,
-                let rxz = userInfo["rxz"] as? Double,
-                let rssi = userInfo["rssi"] as? Int,
-                let timestamp = userInfo["timestamp"] as? Double {
-                let txPos = Position(x: txx, y: txy, z: txz, t: timestamp)
-                let rxPos = Position(x: rxx, y: rxy, z: rxz, t: timestamp)
-
-                DispatchQueue.main.async {
-                    self.updateTX(txname: txname.lowercased(), rssi: rssi, timestamp: timestamp)
-
-                }
-                /// check if update is required
-                var bUpdate: Bool = false
-                if self.realPos == nil {
-                    bUpdate = true
-                } else if let prevPos = self.realPos {
-                    if prevPos != pos {
-                        bUpdate = true
-                    }
-                }
-                /// update if necessary
-                if bUpdate {
-                    DispatchQueue.main.async {
-                        self.updateRealPos(pos: rxPos)
-                    }
-                }
-            }
-        }
-        
+    override internal func didRecvDataHandler(data: WiTracingData) {
         DispatchQueue.main.async {
-        /// handle prediction only exceed prediction interval
-            let now = Date().timeIntervalSince1970
-            guard now - self.prevPredTime > self.predInterval else {
+//        DispatchQueue.global(qos: .background).async {
+            self.updateTX(txname: data.txname.lowercased(), rssi: data.rssi, timestamp: data.timestamp)
+            guard Date().timeIntervalSince1970 - self.prevPredTime > self.minPredInterval else {
                 return
             }
-
-            if let estimation = self.modelPredict() {
-                self.updatePredPos(pos: estimation)
-                self.prevPredTime = now
-//               self.prevMeasuredTime = TXManager.shared().prevMeasuredTime
+            if let _ = self.predict() {
+                self.realPos = data.rxPosition()
+                self.updateError()
+//                DispatchQueue.main.async {
+//                self.tick = true
+//                }
             }
         }
     }
-
+    
+    
     //MARK: - DeepProcessor Methods
+    override func predict() -> Position? {
+        if let prediction = self._predict() {
+            if enableKalman {
+                /// apply kalman filter
+                if self.kalman == nil {
+                    self.kalman = KalmanFilter(pos: prediction)
+                } else {
+                    if let prediction = self.kalman?.predict(position: prediction) {
+                        self.updatePredPos(position: prediction)
+                        return prediction
+                    }
+                }
+            }
+            self.updatePredPos(position: prediction)
+            return prediction
+        }
+        return nil
+    }
     
     /// update transmitter
     /// =====================
@@ -138,7 +92,7 @@ class DeepProcessor : ObservableObject {
             if let rssi = normRssi {
                 self.txs[txname]?.append(rssi)
             }
-            if self.txs[txname]!.count > DeepProcessor.maxWindowSize {
+            if self.txs[txname]!.count > self.maxWindowSize {
                 self.txs[txname]?.remove(at: 0)
             }
             
@@ -148,7 +102,7 @@ class DeepProcessor : ObservableObject {
                 self.txs[txname] = [rssi]
             }
         }
-        _ = self.getInput(shape: [1, 3, 25])
+//        _ = self.getInput(shape: [1, 3, 25])
     }
     
     private func load() {
@@ -231,60 +185,7 @@ class DeepProcessor : ObservableObject {
         return [seqs]
     }
     
-    func getSquareError() -> Double? {
-        if let pos = self.pos, let realPos = self.refPos {
-            return Position.xyDistance(lhs: pos, rhs: realPos)
-        }
-        return nil
-    }
-    
-    /// Update the prediction position
-    func updatePredPos(pos: Position) {
-        if let prevPos = self.pos {
-            if pos == prevPos {
-                return
-            }
-        }
-        self.pos = pos
-        self.predPoses.append(pos)
-        if self.predPoses.count > Predictor.maxNumPredPos {
-            self.predPoses.remove(at: 0)
-        }
-        self.refPos = self.realPos
-        self.updateSquareError()
-    }
-    /// Update the gound truth position
-    func updateRealPos(pos: Position) {
-        if let realPos = self.realPos {
-            /// limit the update frequency for ground true
-            if pos.t - realPos.t < Predictor.minRealPosUpdateInterval {
-                return
-            }
-        }
-        
-        self.realPos = pos
-        self.realPoses.append(pos)
-        if self.realPoses.count > Predictor.maxNumRealPos {
-            self.realPoses.remove(at: 0)
-        }
-        if (self.predPoses.count >= 4 && self.realPoses.count >= 4) {
-            print("pred:", Array(self.predPoses[0...3]))
-            print("real:", Array(self.realPoses[0...3]))
-        }
-        
-    }
-    /// Update the square error
-    func updateSquareError() {
-        if let error = self.getSquareError() {
-            self.squareError = error
-            self.squareErrors.append(error)
-            if self.squareErrors.count > Predictor.maxNumSquareErr {
-                self.squareErrors.remove(at: 0)
-            }
-        }
-    }
-    
-    func modelPredict() -> Position? {
+    func _predict() -> Position? {
         guard let arr = self.getInput(shape: [self.batch.intValue, self.seq.intValue, self.dim.intValue]) else {
             return nil
         }
@@ -293,7 +194,7 @@ class DeepProcessor : ObservableObject {
             let output = try self.model.prediction(lstm_2_input: tensor)
             let prediction = output.Identity
             let lastSeqIndex = NSNumber(value: self.seq.intValue - 1)
-            let meanstd = DeepProcessor.shared().meanstd
+            let meanstd = self.meanstd
             let x = prediction[[0, lastSeqIndex, 0]].doubleValue * (meanstd["x"]!.std + 1e-10) + meanstd["x"]!.mean
             let y = prediction[[0, lastSeqIndex, 1]].doubleValue * (meanstd["y"]!.std + 1e-10) + meanstd["y"]!.mean
             let z = prediction[[0, lastSeqIndex, 2]].doubleValue * (meanstd["z"]!.std + 1e-10) + meanstd["z"]!.mean
@@ -319,4 +220,3 @@ class DeepProcessor : ObservableObject {
         return tensor
     }
 }
-

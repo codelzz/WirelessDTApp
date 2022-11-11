@@ -9,19 +9,19 @@ import SwiftUI
 import Charts
 
 struct PredictionView: View {
-    @EnvironmentObject var predictor:Predictor
+    @EnvironmentObject var triPredictor:TrilaterationPredictor
     var body: some View {
         VStack{
             /// Header
             HeaderView(title: Constant.Prediction, subTitle: "Position Estimation", titleImage: Constant.PredictionIcon)
             PredictionResultChartView()
             /// Probability Distribution
-            PredictionPDFChartView(data: Statistics.PDF(data: predictor.squareErrors, step: 0.1, min: 0.0, max: 10.0))
+            PredictionPDFChartView(data: Statistics.PDF(data: triPredictor.errs, step: 0.1, min: 0.0, max: 10.0))
             /// Cumulative Distribution
-            PredictionCDFChartView(data: Statistics.CDF(data: predictor.squareErrors, step: 0.1, min: 0.0, max: 10.0))
+            PredictionCDFChartView(data: Statistics.CDF(data: triPredictor.errs, step: 0.1, min: 0.0, max: 10.0))
             /// Summary
             HStack {
-                if let pos = predictor.pos, let err = predictor.squareError {
+                if let pos = triPredictor.predPos, let err = triPredictor.err {
                     Text(String(format: "Estimation: x=%.2f,y=%.2f,z=%.2f", pos.x, pos.y, pos.z))
                         .font(.footnote)
                         .foregroundColor(.secondary)

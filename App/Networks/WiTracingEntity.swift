@@ -40,6 +40,44 @@ struct WiTracingData: Decodable {
             "rssi": self.rssi,"timestamp": self.timestamp]
     }
     
+    /// make
+    /// ==========================
+    /// create a WiTracingData based on dictionary
+    /// - parameters:
+    ///  - dict: the dictionary containing information of a WiTracingData
+    /// - returns: WiTracingData
+    static func make(dict: [AnyHashable: Any]) -> WiTracingData? {
+        if let txname = dict["txname"] as? String,
+           let txx = dict["txx"] as? Double,
+           let txy = dict["txy"] as? Double,
+           let txz = dict["txz"] as? Double,
+           let rxname = dict["rxname"] as? String,
+           let rxx = dict["rxx"] as? Double,
+           let rxy = dict["rxy"] as? Double,
+           let rxz = dict["rxz"] as? Double,
+           let rssi = dict["rssi"] as? Int,
+           let timestamp = dict["timestamp"] as? Double {
+                return WiTracingData(txname: txname, txx: txx, txy: txy, txz: txz,
+                                     rxname: rxname, rxx: rxx, rxy: rxy, rxz: rxz,
+                                     rssi: rssi, timestamp: timestamp)
+        }
+        return nil
+    }
+    
+    /// txPosition
+    /// ==========================
+    /// get transmitter position
+    public func txPosition() -> Position {
+        return Position(x:self.txx, y: self.txy, z: self.txz, t: self.timestamp)
+    }
+    
+    /// rxPosition
+    /// ==========================
+    /// get receiver position
+    public func rxPosition() -> Position {
+        return Position(x:self.rxx, y: self.rxy, z: self.rxz, t: self.timestamp)
+    }
+    
     /// toAppUnit
     /// ==========================
     /// convert unit to match the unit using in the App

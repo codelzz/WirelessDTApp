@@ -118,4 +118,10 @@ class WiTracingSync : ObservableObject {
         self.bListening = false
         self.connection?.cancel()
     }
+    
+    static public func parseWiTracingData(userInfo: [String: Any]) -> WiTracingData? {
+        
+        
+        return nil
+    }
 }

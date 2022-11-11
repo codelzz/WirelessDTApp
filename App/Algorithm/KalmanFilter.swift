@@ -110,9 +110,9 @@ class KalmanFilter {
     /// - parameters:
     ///   - pos: this is Position  which represent current position
     /// - returns: position with corrected x, y and z values
-    func predict(pos: Position) -> Position {
+    func predict(position: Position) -> Position {
         /// Calculate interval between last and current measure
-        var interval = pos.t - self.prevPos.t
+        var interval = position.t - self.prevPos.t
         
         // [WHY] why it work?
         interval = interval * self.intervalGain/// constant
@@ -137,15 +137,15 @@ class KalmanFilter {
                               [0.0,0.0,0.0,0.0,p2,p3]])
         /// Calculate velocity components
         /// This is value of velocity between previous and current position. Distance traveled from the previous to the current position divided by interval between two measurement.
-        let vx = (self.prevPos.x - pos.x) / interval
-        let vy = (self.prevPos.y - pos.y) / interval
-        let vz = (self.prevPos.z - pos.z) / interval
+        let vx = (self.prevPos.x - position.x) / interval
+        let vy = (self.prevPos.y - position.y) / interval
+        let vz = (self.prevPos.z - position.z) / interval
 
         // Set Measured State Vector; current x, y, z and vx, vy and vz
-        zt.setMatrix(matrix:[[pos.x],[vx],[pos.y],[vy],[pos.z],[vz]])
+        zt.setMatrix(matrix:[[position.x],[vx],[position.y],[vy],[position.z],[vz]])
 
         // Set previous Location and Measure Time for next step of processState function.
-        self.prevPos = pos
+        self.prevPos = position
 
         // Return value of kalmanFilter
         return self.step()

@@ -9,7 +9,8 @@ import SwiftUI
 import Charts
 
 struct TXListView: View {
-    @StateObject var txManager: TXManager = TXManager.shared()
+//    @StateObject var txManager: TXManager = TXManager.shared()
+    @StateObject var manager = DataManager.shared()
     
     var body: some View {
         VStack {
@@ -17,7 +18,7 @@ struct TXListView: View {
             // List
             List {
                 /// display all tx
-                ForEach(self.txManager.txs.sorted (by: >), id: \.value.id) { key, tx in
+                ForEach(self.manager.transmitters.sorted (by: >), id: \.value.id) { key, tx in
                     TXListItemView(tx: tx)
                 }
             }
