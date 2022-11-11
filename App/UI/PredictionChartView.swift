@@ -9,8 +9,8 @@ import SwiftUI
 import Charts
 
 struct PredictionResultChartView: View {
-    @EnvironmentObject var triPredictor:TrilaterationPredictor
-
+    let trajectory:[Position]
+    
     var body: some View {
         Text("Real-time Prediction")
             .fontWeight(.semibold)
@@ -19,19 +19,19 @@ struct PredictionResultChartView: View {
         Chart {
             /// IMPORTANT: We need to swap x-y to match the game map in unreal
             /// Ground Truth
-            ForEach(triPredictor.dataManager.realPosArr) { pos in
+            ForEach(DataManager.shared().realPosArr) { pos in
                 PointMark(x: .value("x", pos.y), y: .value("y", pos.x))
             }.foregroundStyle(by: .value("key", Constant.GroundTruth))
                 .symbol(by: .value("key", Constant.GroundTruth))
                 .symbolSize(20)
             /// Prediction
-            ForEach(triPredictor.predTrajectory) { pos in
+            ForEach(trajectory) { pos in
                 PointMark(x: .value("x", pos.y), y: .value("y", pos.x))
             }.foregroundStyle(by: .value("key", Constant.Prediction))
                 .symbol(by: .value("key", Constant.Prediction))
                 .symbolSize(20)
             /// TX
-            ForEach(triPredictor.getAllTransmitterPositions()) { pos in
+            ForEach(DataManager.shared().txs.getAllPositions()) { pos in
                 PointMark(x: .value("x", pos.y), y: .value("y", pos.x))
             }.foregroundStyle(by: .value("key", Constant.Transmitters))
                 .symbol(by: .value("key", Constant.Transmitters))

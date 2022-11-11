@@ -11,10 +11,10 @@ protocol PredictorProtocol {
     func predict() -> Position?
 }
 
-class Predictor : TickableObject, PredictorProtocol {
+class Predictor : ObservableObject, PredictorProtocol {
     //MARK: Predictor Properties
     /// tick for trigger UI update from main thread
-//    @Published var tick:Bool = true
+    @Published var _tick:Int = 0
     /// prediction result of the position
     var predPos:Position?
     /// ground truth of the position, this is only use for error analysis
@@ -22,9 +22,9 @@ class Predictor : TickableObject, PredictorProtocol {
     /// trajectory of the prediction i.e. the historical data of the prediction
     var predTrajectory: [Position] = []
     /// maximum length of the trajectory
-    let maxPredTrajectoryLen: Int = 25
+    let maxPredTrajectoryLen: Int = 20
     /// prediction interval
-    var minPredInterval: Double = 0.10
+    var minPredInterval: Double = 0.2
     /// previous predict time
     var prevPredTime: Double = Date().timeIntervalSince1970
     /// error
@@ -36,8 +36,7 @@ class Predictor : TickableObject, PredictorProtocol {
     ///
     var timer:Timer?
 
-    override init() {
-        super.init()
+    init() {
         NotificationCenter.default.addObserver(self, selector: #selector(self._didRecvDataHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.timerHandler), userInfo: nil, repeats: true)
     }
@@ -59,7 +58,6 @@ class Predictor : TickableObject, PredictorProtocol {
             if let _ = self.predict() {
                 self.realPos = data.rxPosition()
                 self.updateError()
-                self.tick()
             }
         }
     }
@@ -68,6 +66,10 @@ class Predictor : TickableObject, PredictorProtocol {
         DispatchQueue.main.async {
             self.tick()
         }
+    }
+    
+    private func tick() {
+        self._tick += 1
     }
 
     

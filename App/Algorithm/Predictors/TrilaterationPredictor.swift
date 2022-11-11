@@ -9,34 +9,45 @@ import Foundation
 
 
 class TrilaterationPredictor: Predictor {
-    let trilateration:Trilateration = SmoothSwapTrilateration()
+    let trilateration:Trilateration = SmoothSwapTrilateration()    
     var kalman:KalmanFilter?
-    var enableKalman:Bool = true
+    var enableKalman:Bool = false
 
     //MARK: TrilaterationPredictor Properties
     /// the observation of transmitter, key: the name of transmitter, value: the transmitter
-    var transmitters:[String: TX] = [:]
+    var txs:[String: TX] = [:]
     
     override init() {
         super.init()
     }
     
     override internal func didRecvDataHandler(data: WiTracingData) {
-        DispatchQueue.main.async {
-            self.updateTransmitters(name: data.txname, rssi: data.rssi, position: data.txPosition())
+        //MARK: Dispatch prediction in background thread
+        DispatchQueue.global(qos: .background).sync {
+            self.updateTXs(name: data.txname, rssi: data.rssi, position: data.txPosition())
+            /// ensure prediction is excced the minimal prediction interval
             guard Date().timeIntervalSince1970 - self.prevPredTime > self.minPredInterval else {
                 return
             }
-            if let _ = self.predict() {
-                self.realPos = data.rxPosition()
-                self.updateError()
+            if let prediction = self.predict() {
+                /// ensure new prediction is different from the previous one
+                if let prevPos = self.predPos {
+                    guard Position.distance(lhs: prevPos, rhs: prediction) > 0.001 else {
+                        return
+                    }
+                }
+                //MARK: Dispatch result update in main thread
+                DispatchQueue.main.async {
+                    self.realPos = data.rxPosition()
+                    self.updatePredPos(position: prediction)
+                    self.updateError()
+                }
             }
         }
     }
     
     override func predict() -> Position? {
-        let transmitters = self.getAllDetectableTransmitters()
-        if let prediction = self.trilateration.predict(txs: transmitters) {
+        if let prediction = self.trilateration.predict(txs:Array(self.txs.values)) {
             if self.trilateration.isValid {
                 if enableKalman {
                     /// apply kalman filter
@@ -44,12 +55,10 @@ class TrilaterationPredictor: Predictor {
                         self.kalman = KalmanFilter(pos: prediction)
                     } else {
                         if let prediction = self.kalman?.predict(position: prediction) {
-                            self.updatePredPos(position: prediction)
                             return prediction
                         }
                     }
                 }
-                self.updatePredPos(position: prediction)
                 return prediction
             }
         }
@@ -64,27 +73,10 @@ class TrilaterationPredictor: Predictor {
     ///  - txname: the name of transmitter
     ///  - rssi: the signal strength measurement of transmitter from receiver position
     ///  - txPos: the position of the transmitter
-    private func updateTransmitters(name:String, rssi:Int, position:Position) {
-        if self.transmitters[name] == nil {
-            self.transmitters[name] = TX(name: name, position: position)
+    private func updateTXs(name:String, rssi:Int, position:Position) {
+        if self.txs[name] == nil {
+            self.txs[name] = TX(name: name, position: position)
         }
-        self.transmitters[name]?.update(rssi: rssi, position: position)
-    }
-
-    /// getAllDetectableTransmitters
-    /// =================
-    /// get all detectable transmitters
-    func getAllDetectableTransmitters() -> [TX] {
-        var transmitters: [TX] = []
-        for (_, tx) in self.transmitters {
-            if tx.isDetectable() {
-                transmitters.append(tx)
-            }
-        }
-        return transmitters
-    }
-
-    func getAllTransmitterPositions() -> [Position] {
-        return self.transmitters.map { $0.value.pos }
+        self.txs[name]?.update(rssi: rssi, position: position)
     }
 }

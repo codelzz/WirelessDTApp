@@ -11,7 +11,7 @@ import Foundation
 // Data Manager
 // ==================
 // Managing Data for Prediction
-class DataManager : TickableObject {
+class DataManager : ObservableObject {
     //MARK: - DataManager Singleton
     private static var _shared:DataManager = {
         return DataManager()
@@ -28,20 +28,15 @@ class DataManager : TickableObject {
     /// the array contrain the historical data of real position
     var realPosArr: [Position] = []
     /// the maximun size of real position array
-    static let maxRealPosArrLen:Int = 50
+    let maxRealPosArrLen:Int = 50
     /// the minimun real position update interval
-    static let minRealPosUpdateInterval:Double = 0.15
-    //
-    var timer:Timer?
+    let minRealPosUpdateInterval:Double = 0
     /// the observation of transmitter, key: the name of transmitter, value: the transmitter
-    var transmitters:[String: TX] = [:]
-    
+    @Published var txs:[String: TX] = [:]
     
     //MARK: - DataManager Constructor
-    override init() {
-        super.init()
+    init() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.didRecvDataHandler(notification:)), name: Constant.NotificationNameWiTracingDidRecvData, object: nil)
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.timerHandler), userInfo: nil, repeats: true)
         print("[INF] \(String(describing: DataManager.self)) Ready")
     }
     
@@ -51,19 +46,9 @@ class DataManager : TickableObject {
             if let data = WiTracingData.make(dict: userInfo) {
                 DispatchQueue.main.async {
                     self.updateRealPosition(position: data.rxPosition())
-                    self.updateTransmitters(name: data.txname, rssi: data.rssi, position: data.txPosition())
-                    
+                    self.updateTXs(name: data.txname, rssi: data.rssi, position: data.txPosition())
                 }
             }
-        }
-    }
-        
-    @objc func timerHandler() {
-        DispatchQueue.main.async {
-            for (_, v) in self.transmitters {
-                v.tick()
-            }
-            self.tick()
         }
     }
     
@@ -75,12 +60,17 @@ class DataManager : TickableObject {
     /// Asynchronously update real position
     private func updateRealPosition(position: Position) {
         /// ensure real pos position has not been initialize or the real position is out of date
-        guard self.realPos == nil || self.realPos!.t + DataManager.minRealPosUpdateInterval < position.t else {
+        guard self.realPos == nil || self.realPos!.t + self.minRealPosUpdateInterval < position.t else {
             return
+        }
+        if let realPos = self.realPos {
+            guard Position.distance(lhs: realPos,rhs: position) > 0.001 else {
+                return
+            }
         }
         self.realPos = position
         self.realPosArr.append(position)
-        if self.realPosArr.count > DataManager.maxRealPosArrLen {
+        if self.realPosArr.count > self.maxRealPosArrLen {
             self.realPosArr.removeFirst()
         }
     }
@@ -93,27 +83,14 @@ class DataManager : TickableObject {
     ///  - txname: the name of transmitter
     ///  - rssi: the signal strength measurement of transmitter from receiver position
     ///  - txPos: the position of the transmitter
-    private func updateTransmitters(name:String, rssi:Int, position:Position) {
-        if self.transmitters[name] == nil {
-            self.transmitters[name] = TX(name: name, position: position)
+    private func updateTXs(name:String, rssi:Int, position:Position) {
+        if self.txs[name] == nil {
+            self.txs[name] = TX(name: name, position: position)
         }
-        self.transmitters[name]?.update(rssi: rssi, position: position)
+        self.txs[name]?.update(rssi: rssi, position: position)
     }
     
-//    /// getAllDetectableTransmitters
-//    /// =================
-//    /// get all detectable transmitters
-//    func getAllDetectableTransmitters() -> [TX] {
-//        var transmitters: [TX] = []
-//        for (_, tx) in DataManager.shared().transmitters {
-//            if tx.isDetectable() {
-//                transmitters.append(tx)
-//            }
-//        }
-//        return transmitters
-//    }
-//    
     func getAllTransmitterPositions() -> [Position] {
-        return self.transmitters.map { $0.value.pos }
+        return self.txs.map { $0.value.position }
     }
 }

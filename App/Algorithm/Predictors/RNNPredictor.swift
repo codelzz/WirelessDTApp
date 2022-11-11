@@ -39,18 +39,17 @@ class RNNPredictor: Predictor {
     
     //MARK: - DeepProcessor Notification Handler
     override internal func didRecvDataHandler(data: WiTracingData) {
-        DispatchQueue.main.async {
-//        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).sync {
             self.updateTX(txname: data.txname.lowercased(), rssi: data.rssi, timestamp: data.timestamp)
             guard Date().timeIntervalSince1970 - self.prevPredTime > self.minPredInterval else {
                 return
             }
-            if let _ = self.predict() {
-                self.realPos = data.rxPosition()
-                self.updateError()
-//                DispatchQueue.main.async {
-//                self.tick = true
-//                }
+            if let prediction = self.predict() {
+                DispatchQueue.main.async {
+                    self.realPos = data.rxPosition()
+                    self.updatePredPos(position: prediction)
+                    self.updateError()
+                }
             }
         }
     }
@@ -65,12 +64,10 @@ class RNNPredictor: Predictor {
                     self.kalman = KalmanFilter(pos: prediction)
                 } else {
                     if let prediction = self.kalman?.predict(position: prediction) {
-                        self.updatePredPos(position: prediction)
                         return prediction
                     }
                 }
             }
-            self.updatePredPos(position: prediction)
             return prediction
         }
         return nil
@@ -102,7 +99,6 @@ class RNNPredictor: Predictor {
                 self.txs[txname] = [rssi]
             }
         }
-//        _ = self.getInput(shape: [1, 3, 25])
     }
     
     private func load() {

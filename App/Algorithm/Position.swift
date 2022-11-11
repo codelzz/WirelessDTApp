@@ -14,7 +14,7 @@ struct Position : Identifiable, Equatable {
     var y:Double
     var z:Double
     var t:Double
-
+    var xyz:[Double] { return [x,y,z] }
     
     init(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0, t: Double = Date().timeIntervalSince1970) {
         self.x = x
@@ -39,10 +39,3 @@ struct Position : Identifiable, Equatable {
         return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z
     }
 }
-
-///// The protocol for prediction position
-//protocol PositioningAlgorithm {
-//    var isValid: Bool {get}
-//    func predict(txs: [TX]) -> Position?
-//}
-//

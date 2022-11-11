@@ -16,7 +16,7 @@ struct AppApp: App {
     /// environment object
     @StateObject var triPredictor = TrilaterationPredictor()
     @StateObject var dlPredictor = RNNPredictor()
-    @State private var selection = 2
+    @State private var selection = 0
 
     var body: some Scene {
         WindowGroup {
@@ -28,7 +28,7 @@ struct AppApp: App {
                     Text(Constant.TX)
                 }.tag(0)
                 NavigationView {
-                    PredictionView()
+                    TrilaterationPredictionView()
                 }.tabItem {
                     Image(systemName: Constant.PredictionIcon)
                     Text(Constant.Prediction)

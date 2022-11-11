@@ -18,7 +18,7 @@ struct TXListView: View {
             // List
             List {
                 /// display all tx
-                ForEach(self.manager.transmitters.sorted (by: >), id: \.value.id) { key, tx in
+                ForEach(self.manager.txs.sortByName()) { tx in
                     TXListItemView(tx: tx)
                 }
             }

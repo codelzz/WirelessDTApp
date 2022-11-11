@@ -20,61 +20,101 @@ struct RSSIMeasurement: Identifiable {
     }
 }
 
-class TX : TickableObject, Identifiable, Comparable {
+class TX : ObservableObject, Identifiable {
     //MARK: - TX Properties
     var id: String { name }
     let name: String
-    var pos:Position
-    var rssi: Int?
-    var timestamp: Double?
+    var position:Position
+    var x: Double { position.x }
+    var y: Double { position.y }
+    var z: Double { position.z }
+    var timestamp: Double {position.t}
+    @Published var rssi: Int?
     var rssis: [RSSIMeasurement] = []
     var distance: Double { Signal.rssiToDistance(rssi: rssi!) }
     static let minRssi: Int = -255
-    static let maxNumMeasurement: Int = 50
+    static let maxRssisNum: Int = 50
     
     //MARK: - TX Constructor
     init(name: String, position: Position) {
         self.name = name
-        self.pos = position
+        self.position = position
     }
     
     //MARK: - TX Methods
-    
     func update(rssi: Int, position: Position)
     {
-        DispatchQueue.main.async {
-            self.pos = position
-            self.rssi = rssi > TX.minRssi ? rssi : nil
-            self.timestamp = position.t
-            /// append the measurement to the history stack
-            self.rssis.append(RSSIMeasurement(rssi: rssi, timestamp: position.t))
-            if self.rssis.count > TX.maxNumMeasurement
-            {
-                self.rssis.remove(at: 0)
-            }
+        self.position = position
+        self.rssi = rssi > TX.minRssi ? rssi : nil
+        /// append the measurement to the history stack
+        self.rssis.append(RSSIMeasurement(rssi: rssi, timestamp: position.t))
+        if self.rssis.count > TX.maxRssisNum {
+            self.rssis.remove(at: 0)
         }
     }
     
     func isDetectable() -> Bool {
         return self.rssi != nil && self.rssi! > TX.minRssi
     }
-
-    //MARK: - TX Operator Method
     
-    static func < (lhs: TX, rhs: TX) -> Bool {
-        let lhsRSSI = lhs.rssi ?? TX.minRssi;
-        let rhsRSSI = rhs.rssi ?? TX.minRssi;
-        return lhsRSSI < rhsRSSI
+    func duplicate() -> TX {
+        let tx = TX(name: self.name, position: self.position)
+        tx.rssi = self.rssi
+        tx.rssis = self.rssis
+        return tx
     }
-    
-    static func == (lhs: TX, rhs: TX) -> Bool {
-        /// ensure rssi is valid
-        guard lhs.rssi != nil && rhs.rssi != nil else {
+}
+
+//MARK: - TX Array Extension
+extension Array where Element == TX {
+    func sortByName() -> [TX] {
+        return self.sorted { lhs, rhs in
+            if let lhsID = Int(lhs.name.replacingOccurrences(of: "tx", with: "")) {
+                if let rhsID:Int = Int(rhs.name.replacingOccurrences(of: "tx", with: "")) {
+                    return lhsID < rhsID
+                }
+            }
             return false
         }
-        let lhsRSSI = lhs.rssi!;
-        let rhsRSSI = rhs.rssi!;
-        return lhsRSSI == rhsRSSI
     }
     
+    /// getAllDetectableTransmitters
+    /// =================
+    /// get all detectable transmitters
+    func getAllDetectable() -> [TX] {
+        var txs: [TX] = []
+        self.forEach { tx in
+            if tx.isDetectable() {
+                txs.append(tx)
+            }
+        }
+        return txs
+    }
+    
+    func getAllPositions() -> [Position] {
+        return self.map { $0.position }
+    }
+    
+    func duplicate() -> [TX] {
+        var txs: [TX] = []
+        self.forEach { tx in
+            txs.append(tx.duplicate())
+        }
+        return txs
+    }
+}
+
+//MARK: - TX Dictionary Extension
+extension Dictionary where Key == String, Value == TX {
+    func sortByName() -> [TX] {
+        return Array(self.values).sortByName()
+    }
+    
+    func getAllDetectable() -> [TX] {
+        return Array(self.values).getAllDetectable()
+    }
+    
+    func getAllPositions() -> [Position] {
+        return Array(self.values).getAllPositions()
+    }
 }

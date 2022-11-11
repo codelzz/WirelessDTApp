@@ -12,7 +12,7 @@ struct PredictionPDFChartView: View {
     let data: [[Double]]
 
     var body: some View {
-        Text("Prediction Probability Distribution of Position Error")
+        Text("Probability Distribution of Position Error")
             .fontWeight(.semibold)
             .font(.caption)
         Chart (data, id: \.first) { point in

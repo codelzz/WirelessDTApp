@@ -25,7 +25,7 @@ struct TXListItemView: View {
                         Text(tx.name)
                             .fontWeight(.semibold)
                             .minimumScaleFactor(0.5)
-                        Text(String(format: "x=%.2f y=%.2f z=%.2f", tx.pos.x, tx.pos.y, tx.pos.z))
+                        Text(String(format: "x=%.2f y=%.2f z=%.2f", tx.position.x, tx.position.y, tx.position.z))
                             .font(.footnote)
                             .fontWeight(.thin)
                             .foregroundColor(.secondary)
@@ -54,7 +54,7 @@ struct TXListItemView: View {
                         )
                     }
                 }.frame(height: 20)
-                    .chartXScale(domain: ClosedRange(uncheckedBounds: (lower: 0, upper: TX.maxNumMeasurement)))
+                    .chartXScale(domain: ClosedRange(uncheckedBounds: (lower: 0, upper: TX.maxRssisNum)))
                     .chartYScale(domain: ClosedRange(uncheckedBounds: (lower: TXListItemView.minDisplayRssi, upper: TXListItemView.maxDisplayRssi)))
                     .chartXAxis {}
                     .chartYAxis {}

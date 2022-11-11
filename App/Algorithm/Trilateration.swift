@@ -29,13 +29,14 @@ class Trilateration {
         var distances : [Double] = []
         sortedTXs.forEach { tx in
             distances.append(tx.distance)
-            points.append(tx.pos)
+            points.append(tx.position)
         }
         return (Array(points[0...3]), Array(distances[0...3]))
     }
 
     func predict(txs: [TX]) -> Position?
     {
+        let txs = txs.getAllDetectable()
         /// Ensure detectable transmitters meet the minimun number
         guard txs.count >= 4 else {
             return nil
@@ -56,9 +57,7 @@ class Trilateration {
     private func getMeasuredTime(txs: [TX]) -> Double {
         var t: Double = 0.0
         txs.forEach { tx in
-            if let timestamp = tx.timestamp {
-                t = max(t, timestamp)
-            }
+            t = max(t, tx.timestamp)
         }
         return t
     }
@@ -88,7 +87,7 @@ class SmoothSwapTrilateration :  Trilateration{
         var points: [Position] = []
         var distances : [Double] = []
         tops.forEach { tx in
-            points.append(tx.pos)
+            points.append(tx.position)
             distances.append(tx.distance)
         }
         self.prevTop4TXs = Array(tops[0...3])
@@ -98,7 +97,12 @@ class SmoothSwapTrilateration :  Trilateration{
     private func smoothSwap (txs: [TX]) -> [TX] {
         /// sort transmitter by rssi
         let sortedTXs = txs.sorted { (lhs, rhs) in
-            return lhs > rhs
+            if let lhsRssi = lhs.rssi {
+                if let rhsRssi = rhs.rssi {
+                    return lhsRssi > rhsRssi
+                }
+            }
+            return false
         }
         
         /// ensure there is sufficient valid transmitter  for swapping

@@ -57,9 +57,9 @@ struct WiTracingData: Decodable {
            let rxz = dict["rxz"] as? Double,
            let rssi = dict["rssi"] as? Int,
            let timestamp = dict["timestamp"] as? Double {
-                return WiTracingData(txname: txname, txx: txx, txy: txy, txz: txz,
-                                     rxname: rxname, rxx: rxx, rxy: rxy, rxz: rxz,
-                                     rssi: rssi, timestamp: timestamp)
+            return WiTracingData(txname: txname.lowercased(), txx: txx, txy: txy, txz: txz,
+                                 rxname: rxname.lowercased(), rxx: rxx, rxy: rxy, rxz: rxz,
+                                 rssi: rssi, timestamp: timestamp)
         }
         return nil
     }
