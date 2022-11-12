@@ -12,7 +12,7 @@ struct PredictionCDFChartView: View {
     let data: [[Double]]
 
     var body: some View {
-        Text("Cumulative Distribution of Position Error")
+        Text("Cumulative Distribution of Position Error (meters)")
             .fontWeight(.semibold)
             .font(.caption)
         Chart (data, id: \.first) { point in

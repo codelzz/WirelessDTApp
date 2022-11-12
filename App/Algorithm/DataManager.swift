@@ -24,13 +24,13 @@ class DataManager : ObservableObject {
 
     //MARK: Ground Truth Position Properties
     /// the latest real position
-    var realPos:Position?
+    @Published var realPos:Position?
     /// the array contrain the historical data of real position
-    var realPosArr: [Position] = []
+    var realTrajectory: [Position] = []
     /// the maximun size of real position array
-    let maxRealPosArrLen:Int = 50
+    let maxRealTrajectoryLen:Int = 100
     /// the minimun real position update interval
-    let minRealPosUpdateInterval:Double = 0
+    let minRealPosUpdateInterval:Double = 1
     /// the observation of transmitter, key: the name of transmitter, value: the transmitter
     @Published var txs:[String: TX] = [:]
     
@@ -69,9 +69,9 @@ class DataManager : ObservableObject {
             }
         }
         self.realPos = position
-        self.realPosArr.append(position)
-        if self.realPosArr.count > self.maxRealPosArrLen {
-            self.realPosArr.removeFirst()
+        self.realTrajectory.append(position)
+        if self.realTrajectory.count > self.maxRealTrajectoryLen {
+            self.realTrajectory.removeFirst()
         }
     }
     

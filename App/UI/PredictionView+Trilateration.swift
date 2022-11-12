@@ -10,13 +10,15 @@ import Charts
 
 struct TrilaterationPredictionView: View {
     @EnvironmentObject var predictor:TrilaterationPredictor
+    
     var body: some View {
         VStack{
             /// Header
-            HeaderView(title: Constant.Prediction, subTitle: "Position Estimation", titleImage: Constant.PredictionIcon)
-            PredictionResultChartView(trajectory: predictor.predTrajectory)
+            HeaderView(title: Constant.Trilateration, subTitle: "Trilateration Algorithm Evaluation", titleImage: Constant.PredictionIcon)
+            PredictionResultChartView(trajectory: predictor.predTrajectory,
+                                      movingAverageTrajectory: predictor.predMovingAvgTrajectory)
             /// Probability Distribution
-            PredictionPDFChartView(data: Statistics.PDF(data: predictor.errs, step: 0.1, min: 0.0, max: 10.0))
+            PredictionPDFChartView(data: Statistics.PDF(data: predictor.errs, step: 0.1, min: 0.0, max: 10.0), movingAvgErr: nil)
             /// Cumulative Distribution
             PredictionCDFChartView(data: Statistics.CDF(data: predictor.errs, step: 0.1, min: 0.0, max: 10.0))
             /// Summary

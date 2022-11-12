@@ -31,13 +31,13 @@ struct AppApp: App {
                     TrilaterationPredictionView()
                 }.tabItem {
                     Image(systemName: Constant.PredictionIcon)
-                    Text(Constant.Prediction)
+                    Text(Constant.Trilateration)
                 }.tag(1)
                 NavigationView {
                     DeepLearningView()
                 }.tabItem {
                     Image(systemName: Constant.DeepLearningIcon)
-                    Text(Constant.DeepLearning)
+                    Text(Constant.RNN)
                 }.tag(2)
             }
             .environmentObject(triPredictor)

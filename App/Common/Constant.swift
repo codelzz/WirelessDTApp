@@ -10,8 +10,15 @@ import Foundation
 class Constant {
     /// Common
     static let Prediction = "Prediction"
+    static let PredictionTrajectory = "Prediction Trajectory"
+    static let PredictionMovingAverage = "Prediction Moving Average"
+    static let PredictionMovingAverageTrajectory = "Prediction MA Trajectory"
     static let GroundTruth = "Ground Truth"
+    static let GroundTruthTrajectory = "GT Trajectory"
     static let Settings = "Settings"
+    static let RecurrentNeuralNetwork = "Recurrent neural network"
+    static let RNN = "RNN"
+    static let Trilateration = "Trilateration"
     static let DeepLearning = "Deep Learning"
     static let Transmitters = "Transmitters"
     static let Receivers = "Transmitters"

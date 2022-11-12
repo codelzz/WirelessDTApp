@@ -38,4 +38,11 @@ struct Position : Identifiable, Equatable {
     static func == (lhs: Position, rhs: Position) -> Bool {
         return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z
     }
+    
+    static func * (lhs: Double, rhs: Position) -> Position {
+        return Position(x: lhs * rhs.x, y: lhs * rhs.y, z: lhs * rhs.z, t: rhs.t)
+    }
+}
+
+extension Array where Element == Position {
 }
