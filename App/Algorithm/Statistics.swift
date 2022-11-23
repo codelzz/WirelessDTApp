@@ -21,6 +21,7 @@ class Statistics {
             let x = String(format: "%f", origin + Double(i) * step)
             counter[x] = 0
         }
+        
         data.forEach { v in
             if v >= max {
                 let x = String(format: "%f", max - 0.5 * step)
@@ -37,6 +38,8 @@ class Statistics {
                 }
             }
         }
+        
+        
 
         var pdf: [[Double]] = []
         counter.forEach { (k, v) in

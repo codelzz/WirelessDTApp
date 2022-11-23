@@ -14,7 +14,7 @@ struct TrilaterationPredictionView: View {
     var body: some View {
         VStack{
             /// Header
-            HeaderView(title: Constant.Trilateration, subTitle: "Trilateration Algorithm Evaluation", titleImage: Constant.PredictionIcon)
+            HeaderView(title: Constant.Trilateration, subTitle: "Trilateration Algorithm", titleImage: Constant.PredictionIcon)
             PredictionResultChartView(trajectory: predictor.predTrajectory,
                                       movingAverageTrajectory: predictor.predMovingAvgTrajectory)
             /// Probability Distribution

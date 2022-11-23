@@ -35,13 +35,13 @@
 		17D7FCB62919F6E9002A9153 /* TX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34862913AAA800FAD24B /* TX.swift */; };
 		17D7FCB72919F709002A9153 /* Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178774E429152B35008CC1C8 /* Signal.swift */; };
 		17D7FCBB291A518F002A9153 /* PredictionView+RNN.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCBA291A518F002A9153 /* PredictionView+RNN.swift */; };
-		17D7FCE1291B7DC0002A9153 /* rnnpos.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCE0291B7DBF002A9153 /* rnnpos.mlmodel */; };
 		17D7FCE3291B8403002A9153 /* Tensor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCE2291B8403002A9153 /* Tensor.swift */; };
-		17D7FCEA291BD694002A9153 /* meanstd.json in Resources */ = {isa = PBXBuildFile; fileRef = 17D7FCE9291BD694002A9153 /* meanstd.json */; };
 		17D7FCEC291CEB55002A9153 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCEB291CEB55002A9153 /* DataManager.swift */; };
 		17D7FCEE291D27FA002A9153 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCED291D27FA002A9153 /* Predictor.swift */; };
 		17D7FCF1291D30F1002A9153 /* TrilaterationPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCF0291D30F1002A9153 /* TrilaterationPredictor.swift */; };
 		17D7FCF3291D4DA2002A9153 /* RNNPredictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FCF2291D4DA2002A9153 /* RNNPredictor.swift */; };
+		17D7FD2C2929FCBA002A9153 /* meanstd.json in Resources */ = {isa = PBXBuildFile; fileRef = 17D7FD2A2929FCBA002A9153 /* meanstd.json */; };
+		17D7FD2F292A30DC002A9153 /* rnnpos.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 17D7FD2E292A30DC002A9153 /* rnnpos.mlmodel */; };
 		17ED34872913AAA800FAD24B /* TX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED34862913AAA800FAD24B /* TX.swift */; };
 		17ED348D2913BEA100FAD24B /* configuration.json in Resources */ = {isa = PBXBuildFile; fileRef = 17ED348C2913BEA000FAD24B /* configuration.json */; };
 		17ED348F2913F1EF00FAD24B /* TXListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17ED348E2913F1EF00FAD24B /* TXListView.swift */; };
@@ -87,13 +87,13 @@
 		17D7FCB02919DE50002A9153 /* LeastSquares.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeastSquares.swift; sourceTree = "<group>"; };
 		17D7FCB32919F65C002A9153 /* LeastSquaresTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeastSquaresTest.swift; sourceTree = "<group>"; };
 		17D7FCBA291A518F002A9153 /* PredictionView+RNN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PredictionView+RNN.swift"; sourceTree = "<group>"; };
-		17D7FCE0291B7DBF002A9153 /* rnnpos.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = rnnpos.mlmodel; sourceTree = "<group>"; };
 		17D7FCE2291B8403002A9153 /* Tensor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tensor.swift; sourceTree = "<group>"; };
-		17D7FCE9291BD694002A9153 /* meanstd.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = meanstd.json; sourceTree = "<group>"; };
 		17D7FCEB291CEB55002A9153 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		17D7FCED291D27FA002A9153 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 		17D7FCF0291D30F1002A9153 /* TrilaterationPredictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrilaterationPredictor.swift; sourceTree = "<group>"; };
 		17D7FCF2291D4DA2002A9153 /* RNNPredictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNNPredictor.swift; sourceTree = "<group>"; };
+		17D7FD2A2929FCBA002A9153 /* meanstd.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = meanstd.json; sourceTree = "<group>"; };
+		17D7FD2E292A30DC002A9153 /* rnnpos.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = rnnpos.mlmodel; sourceTree = "<group>"; };
 		17ED34862913AAA800FAD24B /* TX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TX.swift; sourceTree = "<group>"; };
 		17ED348C2913BEA000FAD24B /* configuration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = configuration.json; sourceTree = "<group>"; };
 		17ED348E2913F1EF00FAD24B /* TXListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TXListView.swift; sourceTree = "<group>"; };
@@ -214,9 +214,9 @@
 		17D7FCD6291B7946002A9153 /* DeepLearning */ = {
 			isa = PBXGroup;
 			children = (
+				17D7FD2A2929FCBA002A9153 /* meanstd.json */,
 				17D7FCE2291B8403002A9153 /* Tensor.swift */,
-				17D7FCE9291BD694002A9153 /* meanstd.json */,
-				17D7FCE0291B7DBF002A9153 /* rnnpos.mlmodel */,
+				17D7FD2E292A30DC002A9153 /* rnnpos.mlmodel */,
 			);
 			path = DeepLearning;
 			sourceTree = "<group>";
@@ -381,7 +381,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17D7FCEA291BD694002A9153 /* meanstd.json in Resources */,
+				17D7FD2C2929FCBA002A9153 /* meanstd.json in Resources */,
 				1700C2FD29138A0E004824E9 /* Preview Assets.xcassets in Resources */,
 				1700C2FA29138A0E004824E9 /* Assets.xcassets in Resources */,
 				17ED348D2913BEA100FAD24B /* configuration.json in Resources */,
@@ -490,7 +490,6 @@
 				17ED349A291479D000FAD24B /* UDPAgent.swift in Sources */,
 				178774EF29163876008CC1C8 /* HeaderView.swift in Sources */,
 				17ED34A12914B7C700FAD24B /* WiTracingEntity.swift in Sources */,
-				17D7FCE1291B7DC0002A9153 /* rnnpos.mlmodel in Sources */,
 				178774E529152B35008CC1C8 /* Signal.swift in Sources */,
 				178774DD29150885008CC1C8 /* Trilateration.swift in Sources */,
 				1700C2F629138A0C004824E9 /* AppApp.swift in Sources */,
@@ -500,6 +499,7 @@
 				178774F6291670A7008CC1C8 /* Constant.swift in Sources */,
 				17D7FCEC291CEB55002A9153 /* DataManager.swift in Sources */,
 				17D7FC8D2916CBF4002A9153 /* PredictionChartView.swift in Sources */,
+				17D7FD2F292A30DC002A9153 /* rnnpos.mlmodel in Sources */,
 				17D7FC95291743C5002A9153 /* Matrix.swift in Sources */,
 				17D7FCBB291A518F002A9153 /* PredictionView+RNN.swift in Sources */,
 				178774F429163E0C008CC1C8 /* WiTracingSync.swift in Sources */,

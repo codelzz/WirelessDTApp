@@ -49,13 +49,13 @@ struct TXListItemView: View {
                         BarMark (
                             x: .value("Timestamp", index),
                             yStart: .value("RSSI", element.rssi > TX.minRssi ? element.rssi : TXListItemView.minDisplayRssi),
-                            yEnd: .value("RSSI", TXListItemView.minDisplayRssi),
+                            yEnd: .value("RSSI", TXListItemView.minDisplayRssi+1),
                             width: .fixed(5)
                         )
                     }
                 }.frame(height: 20)
                     .chartXScale(domain: ClosedRange(uncheckedBounds: (lower: 0, upper: TX.maxRssisNum)))
-                    .chartYScale(domain: ClosedRange(uncheckedBounds: (lower: TXListItemView.minDisplayRssi, upper: TXListItemView.maxDisplayRssi)))
+                    .chartYScale(domain: ClosedRange(uncheckedBounds: (lower: TXListItemView.minDisplayRssi, upper: TXListItemView.maxDisplayRssi+1)))
                     .chartXAxis {}
                     .chartYAxis {}
             }

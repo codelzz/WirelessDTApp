@@ -19,6 +19,7 @@ class TrilaterationPredictor: Predictor {
     
     override init() {
         super.init()
+        self.movingAvgExp = 0.2
     }
     
     override internal func didRecvDataHandler(data: WiTracingData) {

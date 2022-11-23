@@ -21,7 +21,7 @@ class RNNPredictor: Predictor {
     ///
     private let batch:NSNumber = 1
     private let seq:NSNumber = 50
-    private let dim:NSNumber = 25
+    private let dim:NSNumber = 50
     var inputShape:[NSNumber] {[self.batch, self.seq, self.dim]}
     private var model:rnnpos
     private(set) var txs : [String: [Double]] = [:] /// dictionary is not threading save in make sure all access are from same thread (e.g. main)
@@ -78,26 +78,45 @@ class RNNPredictor: Predictor {
     /// update transmitter information
     func updateTX(txname: String, rssi: Int, timestamp: Double) {
         /// if transmitter already in the group
+        var normRssi:Double?
         if let _ = self.txs[txname] {
-            var normRssi:Double? = Double(Constant.MinRSSI)
             if rssi < Constant.MinRSSI {
                 /// of rssi is undetactable, then use last measurement
-                normRssi = self.txs[txname]?.last
+//                normRssi = self.txs[txname]?.last
+//                if let interpolation = self.meanstd[txname]?.mean {
+////                    normRssi = self.normalizeRSSI(txname: txname, rssi: Int(interpolation))
+//                    normRssi = 0
+//                }
+//                normRssi = 0
+                normRssi = self.txs[txname]!.last
             } else {
                 normRssi = self.normalizeRSSI(txname: txname, rssi: rssi)
             }
-            if let rssi = normRssi {
-                self.txs[txname]?.append(rssi)
-            }
+//            normRssi = self.normalizeRSSI(txname: txname, rssi: rssi)
+            let finalRssi = normRssi ?? 0
+            self.txs[txname]?.append(finalRssi)
+            
             if self.txs[txname]!.count > self.maxWindowSize {
                 self.txs[txname]?.remove(at: 0)
             }
-            
         } else {
             /// if no measurement
-            if let rssi = self.normalizeRSSI(txname: txname, rssi: rssi) {
-                self.txs[txname] = [rssi]
+            if rssi <= Constant.MinRSSI {
+                /// of rssi is undetactable, then use last measurement
+//                if let interpolation = self.meanstd[txname]?.mean {
+//                    normRssi = self.normalizeRSSI(txname: txname, rssi: Int(interpolation))
+//                }
+                normRssi = 0
+            } else {
+                normRssi = self.normalizeRSSI(txname: txname, rssi: rssi)
             }
+            
+            let finalRssi = normRssi ?? 0
+
+//            normRssi = self.normalizeRSSI(txname: txname, rssi: rssi)
+//            if let rssi = normRssi {
+            self.txs[txname] = [finalRssi]
+//            }
         }
     }
     
@@ -155,7 +174,6 @@ class RNNPredictor: Predictor {
             let rhsID:Int = Int(rhs.replacingOccurrences(of: "tx", with: ""))!
             return lhsID < rhsID
         }
-        
         /// check dimension again
         guard txnames.count == dim else {
             print("[ERR] incorrect dimension")
@@ -187,7 +205,7 @@ class RNNPredictor: Predictor {
         }
         let tensor = self.convert(from: arr)
         do {
-            let output = try self.model.prediction(lstm_2_input: tensor)
+            let output = try self.model.prediction(lstm_29_input: tensor)
             let prediction = output.Identity
             let lastSeqIndex = NSNumber(value: self.seq.intValue - 1)
             let meanstd = self.meanstd

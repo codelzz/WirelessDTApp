@@ -55,7 +55,7 @@ struct PredictionResultChartView: View {
                     LineMark(x: .value("x", pos.y), y: .value("y", pos.x))
                 }.foregroundStyle(by: .value("key", Constant.PredictionMovingAverageTrajectory))
                     .symbol(by: .value("key", Constant.PredictionMovingAverageTrajectory))
-                    .symbolSize(10)
+                    .symbolSize(5)
             }
             /// TX
             ForEach(dataManager.txs.getAllPositions()) { pos in
@@ -67,7 +67,7 @@ struct PredictionResultChartView: View {
                                      Constant.GroundTruthTrajectory: Color(.systemGreen).opacity(0.3),
                                      Constant.Prediction: Color(.systemRed).opacity(0.5),
                                      Constant.PredictionMovingAverage: Color(.systemRed).opacity(1.0),
-                                     Constant.PredictionMovingAverageTrajectory: Color(.systemGray).opacity(0.3),
+                                     Constant.PredictionMovingAverageTrajectory: Color(.systemRed).opacity(0.3),
                                      Constant.Transmitters: Color(.systemBlue).opacity(1.0)])
             .chartSymbolScale([Constant.GroundTruth: .circle,
                                Constant.GroundTruthTrajectory: .circle,
@@ -75,8 +75,8 @@ struct PredictionResultChartView: View {
                                Constant.PredictionMovingAverage: .cross,
                                Constant.PredictionMovingAverageTrajectory: .circle,
                                Constant.Transmitters: .asterisk])
-            .chartXScale(domain: -11 ... 11)
-            .chartYScale(domain: -11 ... 11)
+            .chartXScale(domain: -15 ... 15)
+            .chartYScale(domain: -15 ... 15)
             .chartLegend(position: .top, alignment: .topTrailing, spacing: 10)
             .chartXAxis{
                 AxisMarks(values: .stride(by: 1)) { value in

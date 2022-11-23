@@ -31,12 +31,13 @@ class Predictor : ObservableObject, PredictorProtocol {
     var predMovingAvg:Position?
     var predMovingAvgTrajectory: [Position] = []
     let maxPredMovingAvgTrajectoryLen: Int = 1000
-    let movingAvgExp:Double = 0.2
+    let minPredMovingAvgTrajectoryUpdateInterval:Double = 0.5
+    var movingAvgExp:Double = 0.2
     /// error
     var err: Double?
     var movingAvgErr: Double?
     var errs: [Double] = []
-    let maxErrorNum: Int = 500
+    let maxErrorNum: Int = 1000
     ///
     let dataManager = DataManager.shared()
     ///
@@ -75,6 +76,9 @@ class Predictor : ObservableObject, PredictorProtocol {
     }
     
     func updatePredPos(position: Position) {
+        if (self.predPos == position) {
+            return
+        }
         self.predPos = position
         self.predTrajectory.append(position)
         if self.predTrajectory.count > self.maxPredTrajectoryLen {
@@ -97,6 +101,11 @@ class Predictor : ObservableObject, PredictorProtocol {
             let z = alpha * position.z + beta * movingAvg.z
             self.predMovingAvg = Position(x: x,  y: y, z: z, t: position.t)
         }
+        
+        guard self.predMovingAvgTrajectory.count == 0 || self.predMovingAvgTrajectory.last!.t + self.minPredMovingAvgTrajectoryUpdateInterval < position.t else {
+            return
+        }
+        
         self.predMovingAvgTrajectory.append( self.predMovingAvg!)
         if self.predMovingAvgTrajectory.count > self.maxPredMovingAvgTrajectoryLen {
             self.predMovingAvgTrajectory.removeFirst()

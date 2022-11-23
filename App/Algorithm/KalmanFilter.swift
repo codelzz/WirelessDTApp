@@ -12,7 +12,7 @@ class KalmanFilter {
     //MARK: - KalmanFilter properties
     
     /// reduce the delay of kalmans
-    private let intervalGain: Double = 3
+    private let intervalGain: Double = 1
 
     /// The dimension M of the state vector
     private let dimM = 6
@@ -38,7 +38,7 @@ class KalmanFilter {
             return _rValue
         }
     }
-    private var _rValue: Double = 10
+    private var _rValue: Double = 10.0
 
     /// Previous State Vector
     /// =====================

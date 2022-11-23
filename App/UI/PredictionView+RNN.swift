@@ -14,7 +14,7 @@ struct DeepLearningView: View {
     var body: some View {
         VStack{
             /// Header
-            HeaderView(title: Constant.RNN, subTitle: "Recurrent Neural Network Evaluation", titleImage: Constant.DeepLearningIcon)
+            HeaderView(title: Constant.RNN, subTitle: "Recurrent Neural Network", titleImage: Constant.DeepLearningIcon)
             PredictionResultChartView(trajectory: predictor.predTrajectory,
                                       movingAverageTrajectory: predictor.predMovingAvgTrajectory)
             /// Probability Distribution

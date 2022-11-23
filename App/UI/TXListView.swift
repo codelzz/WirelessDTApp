@@ -16,10 +16,15 @@ struct TXListView: View {
         VStack {
             HeaderView(title: Constant.Transmitters, subTitle: "Wireless TXs", titleImage: Constant.TXIcon)
             // List
-            List {
-                /// display all tx
-                ForEach(self.manager.txs.sortByName()) { tx in
-                    TXListItemView(tx: tx)
+            if self.manager.txs.count <= 0 {
+                Spacer()
+                Text("No Data").foregroundColor(.secondary).font(.largeTitle)
+            } else {
+                List {
+                    /// display all tx
+                    ForEach(self.manager.txs.sortByName()) { tx in
+                        TXListItemView(tx: tx)
+                    }
                 }
             }
             Spacer()
