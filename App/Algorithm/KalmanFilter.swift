@@ -10,9 +10,6 @@ import Foundation
 
 class KalmanFilter {
     //MARK: - KalmanFilter properties
-    
-    /// reduce the delay of kalmans
-    private let intervalGain: Double = 1
 
     /// The dimension M of the state vector
     private let dimM = 6
@@ -22,7 +19,7 @@ class KalmanFilter {
     /// Acceleration variance magnitude for GPS
     /// ======================================
     /// **Sigma** value is  value for Acceleration Noise Magnitude Matrix (Qt). Default = 0.06
-    private let sigma = 0.01
+    private let sigma = 1.0
 
     /// Value for Sensor Noise Covariance Matrix
     /// ========================================
@@ -38,7 +35,7 @@ class KalmanFilter {
             return _rValue
         }
     }
-    private var _rValue: Double = 10.0
+    private var _rValue: Double = 1.0
 
     /// Previous State Vector
     /// =====================
@@ -112,10 +109,7 @@ class KalmanFilter {
     /// - returns: position with corrected x, y and z values
     func predict(position: Position) -> Position {
         /// Calculate interval between last and current measure
-        var interval = position.t - self.prevPos.t
-        
-        // [WHY] why it work?
-        interval = interval * self.intervalGain/// constant
+        let interval = position.t - self.prevPos.t
         
         /// Calculate and set Prediction Step Matrix based on new interval value
         A.setMatrix(matrix:[[1,interval,0,0,0,0],

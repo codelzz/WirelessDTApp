@@ -11,7 +11,7 @@ import Foundation
 class TrilaterationPredictor: Predictor {
     let trilateration:Trilateration = SmoothSwapTrilateration()    
     var kalman:KalmanFilter?
-    var enableKalman:Bool = false
+    var enableKalman:Bool = true
 
     //MARK: TrilaterationPredictor Properties
     /// the observation of transmitter, key: the name of transmitter, value: the transmitter
@@ -33,12 +33,14 @@ class TrilaterationPredictor: Predictor {
             if let prediction = self.predict() {
                 /// ensure new prediction is different from the previous one
                 if let prevPos = self.predPos {
-                    guard Position.distance(lhs: prevPos, rhs: prediction) > 0.001 else {
+                    guard Position.distance(lhs: prevPos, rhs: prediction) > 0.1 else {
                         return
                     }
                 }
+                
                 //MARK: Dispatch result update in main thread
-                DispatchQueue.main.async {
+                //MARK: This part need to use sync to guarantee the correct update order when using Kalman Filter
+                DispatchQueue.main.sync {
                     self.realPos = data.rxPosition()
                     self.updatePredPos(position: prediction)
                     self.updateError()

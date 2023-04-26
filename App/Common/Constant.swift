@@ -33,6 +33,7 @@ class Constant {
     static let PredictionIcon = "target"
     static let SettingsIcon = "gearshape.fill"
     static let DeepLearningIcon = "brain"
+    static let ARIcon = "aqi.medium"
     /// Parameters
     static let MinRSSI: Int = -100
 }

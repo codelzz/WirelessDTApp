@@ -32,12 +32,12 @@ class Predictor : ObservableObject, PredictorProtocol {
     var predMovingAvgTrajectory: [Position] = []
     let maxPredMovingAvgTrajectoryLen: Int = 1000
     let minPredMovingAvgTrajectoryUpdateInterval:Double = 0.5
-    var movingAvgExp:Double = 0.2
+    var movingAvgExp:Double = 0.1
     /// error
     var err: Double?
     var movingAvgErr: Double?
     var errs: [Double] = []
-    let maxErrorNum: Int = 1000
+    let maxErrorNum: Int = 3000
     ///
     let dataManager = DataManager.shared()
     ///

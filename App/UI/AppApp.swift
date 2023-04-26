@@ -21,6 +21,13 @@ struct AppApp: App {
     var body: some Scene {
         WindowGroup {
             TabView(selection: $selection){
+//                NavigationView {
+//                    ARViewSUI()
+//                        .ignoresSafeArea(.all)
+//                }.tabItem {
+//                    Image(systemName: Constant.ARIcon)
+//                    Text("AR")
+//                }.tag(0)
                 NavigationView {
                     TXListView()
                 }.tabItem {
