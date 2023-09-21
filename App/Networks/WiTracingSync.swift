@@ -32,6 +32,7 @@ class WiTracingSync : ObservableObject {
     private var connection: NWConnection?
     private var recvData: [String: Any]?
     private var bReady: Bool = false
+    private var bListening: Bool = true
     /// socket
 //    private var nextID: Int = 0
 //    private var connectionHandlers: [Int: ConnectionHandler] = [:]
@@ -40,7 +41,7 @@ class WiTracingSync : ObservableObject {
     /// initializer
     init (port: NWEndpoint.Port) {
         self.port = port
-        self.listener = try? NWListener(using: .tcp, on: self.port)
+        self.listener = try? NWListener(using: .udp, on: self.port)
         self.listener?.stateUpdateHandler = self.listenerStateUpdateHandler(to:)
         self.listener?.newConnectionHandler = self.listenerNewConnectionHander(connection:)
         self.listener?.start(queue: self.queue)
@@ -80,6 +81,7 @@ class WiTracingSync : ObservableObject {
                 print("[INF] Listener failed to receive message - \(connection.endpoint)")
                 /// cancel the listener
                 self.listener?.cancel()
+                self.bListening = false
             default:
                 print("[INF] Listener waiting to receive message - \(connection.endpoint)")
                 break
@@ -124,6 +126,9 @@ class WiTracingSync : ObservableObject {
                     }
                 }
             }
+            if self.bListening {
+                self.recv()
+            }
             if !isComplete {
                 self.recv()
             }
@@ -143,8 +148,6 @@ class WiTracingSync : ObservableObject {
     }
     
     static public func parseWiTracingData(userInfo: [String: Any]) -> WiTracingData? {
-        
-        
         return nil
     }
 }
